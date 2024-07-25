@@ -11,6 +11,8 @@ import swaggerOptions from "./swagger/swaggerOptions";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { connectToDatabase } from "./services/database.service";
+import passport from "./services/auth.service";
+import session from 'express-session';
 
 const app: Express = express();
 
@@ -30,6 +32,18 @@ app.use(helmet());
 
 // CORS middleware
 app.use(cors());
+
+// Session middleware
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: false,
+}));
+
+// Initialize Passport and restore authentication state, if any, from the session
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // Swagger Config
 const specs = swaggerJsdoc(swaggerOptions);
