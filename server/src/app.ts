@@ -10,7 +10,7 @@ import cors from "cors";
 import swaggerOptions from "./swagger/swaggerOptions";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import redisClient from "./services/redis.service";
+import { connectToDatabase } from "./services/database.service";
 
 const app: Express = express();
 
@@ -37,5 +37,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Router Config
 app.use("/api/v1", routes);
+
+// Connect to MongoDB
+connectToDatabase();
 
 export default app;
