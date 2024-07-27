@@ -1,11 +1,25 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { craeteNewUser } from "../dal/user.dal";
+import jwt from 'jsonwebtoken';
+
 
 export const googleCallBack = async (req: Request, res: Response) => {
+  const user = req.user;
+  const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
+    expiresIn: "1h",
+  });
+
+  res.cookie("jwt", token, { httpOnly: true, secure: true });
   res.redirect("/");
 };
 
 export const localLoginCallBack = async (req: Request, res: Response) => {
+  const user = req.user;
+  const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
+    expiresIn: "1h",
+  });
+
+  res.cookie("jwt", token, { httpOnly: true, secure: true });
   res.redirect("/");
 };
 
