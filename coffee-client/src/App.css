@@ -1,0 +1,22 @@
+/* src/App.css */
+
+.App {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.post {
+  padding: 20px;
+  margin-top: 40px;
+}
+
+.post-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.comment {
+  border-top: 1px solid #eee;
+  padding: 10px 0;
+}

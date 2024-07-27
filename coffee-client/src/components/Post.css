@@ -1,0 +1,47 @@
+/* src/components/Post.css */
+
+.post {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-left: 100px;
+    margin-right: 100px;
+    padding: 10px;
+    background-color: #fff;
+  }
+  
+  .post-header {
+    display: flex;
+    align-items: center;
+  }
+  
+  .post-header .avatar {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .post-header-text {
+    flex: 1;
+  }
+  
+  .post-time {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .post-image {
+    width: 100%;
+    border-radius: 8px;
+    margin: 10px 0;
+  }
+  
+  .post-content {
+    margin-bottom: 10px;
+  }
+  
+  .post-comments {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+  }
+  
