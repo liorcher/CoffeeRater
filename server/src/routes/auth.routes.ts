@@ -8,8 +8,6 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 // Route to handle the callback after Google has authenticated the user
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-  // Successful authentication, redirect home.
-  console.log("hello")
   res.redirect('/');
 });
 
