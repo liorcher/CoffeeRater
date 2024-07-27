@@ -1,0 +1,45 @@
+/* src/components/Comment.css */
+
+.comment {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  
+  .comment .avatar {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  
+  .comment-content {
+    flex: 1;
+  }
+  
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .comment-author {
+    font-weight: bold;
+  }
+  
+  .comment-text {
+    margin: 5px 0;
+  }
+  
+  .comment-actions button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .comment-actions button:hover {
+    text-decoration: underline;
+  }
+  
