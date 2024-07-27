@@ -1,24 +1,34 @@
-import { Router } from 'express';
-import passport from '../services/auth.service';
+import { Router } from "express";
+import passport from "../services/auth.service";
+import {
+  googleCallBack,
+  localLoginCallBack,
+  logoutUser,
+  registerUser,
+} from "../controllers/auth.controller";
 
 const router = Router();
 
-// Route to initiate Google authentication
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
 
-// Route to handle the callback after Google has authenticated the user
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-  res.redirect('/');
-});
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  googleCallBack
+);
+
+router.post(
+  "/login",
+  passport.authenticate("local", { failureRedirect: "/login" }),
+  localLoginCallBack
+);
+
+router.post("/signup", registerUser);
 
 // Route to log out the user
-router.get('/logout', (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    res.redirect('/');
-  });
-});
+router.get("/logout", logoutUser);
 
 export default router;

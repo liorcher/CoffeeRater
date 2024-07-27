@@ -6,9 +6,9 @@ import authRoutes from "./auth.routes";
 
 const router = Router();
 
-router.use("/posts", postsRoutes);
-router.use("/comments", commentsRoutes);
-router.use("/users", usersRoutes);
+router.use("/post", postsRoutes);
+router.use("/comment", commentsRoutes);
+router.use("/user", usersRoutes);
 router.use("/auth", authRoutes);
 
 export default router;
