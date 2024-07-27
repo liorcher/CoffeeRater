@@ -2,8 +2,8 @@ import User, { IUser, UserBasicData } from "../models/user";
 
 export const craeteNewUser = async (
   { userName, firstName, lastName, email }: UserBasicData,
-  password: string,
-  avatarUrl: string
+  avatarUrl: string,
+  password?: string,
 ) => {
   try {
     const user = new User({

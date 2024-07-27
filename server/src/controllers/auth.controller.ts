@@ -1,5 +1,4 @@
 import { Router, Request, Response, NextFunction } from "express";
-import User from "../models/user";
 import { craeteNewUser } from "../dal/user.dal";
 
 export const googleCallBack = async (req: Request, res: Response) => {
@@ -11,26 +10,21 @@ export const localLoginCallBack = async (req: Request, res: Response) => {
 };
 
 export const registerUser = async (req: Request, res: Response) => {
-  const { 
-    userName,
-    firstName,
-    lastName,
-    email,
-    password
-   } = req.body;
+  const { userName, firstName, lastName, email, password } = req.body;
 
-   // Add function to save image and create path
-   let imageUrl = ""
+  // Add function to save image and create path
+  let imageUrl = "";
 
   try {
-    await craeteNewUser({
-      userName,
-      firstName,
-      lastName,
-      email
-     },
-    password,
-    imageUrl
+    await craeteNewUser(
+      {
+        userName,
+        firstName,
+        lastName,
+        email,
+      },
+      imageUrl,
+      password
     );
 
     res.redirect("/api/v1/auth/login");
