@@ -1,5 +1,5 @@
 
-const BASE_URL = 'https://localhost:9000/api/v1'
+const BASE_URL = 'http://localhost:9000/api/v1'
 
 const uploadImage = async (image: File) => {
     const response = await fetch(`${BASE_URL}/images/upload`, {
@@ -25,10 +25,14 @@ export const loginWithGoogle = async () => {
     return response_json;
 };
 
-export const login = async (email: string, password: string) => {
+export const login = async (username: string, password: string) => {
+    debugger
     const response = await fetch(`${BASE_URL}/auth/login`, {
-        body: JSON.stringify({email, password: btoa(password)}),
-        method: "POST"
+        body: JSON.stringify({username, password: password}),
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        }
     });
     if (!response.ok) {
         console.log(response)
@@ -61,6 +65,7 @@ export const logout = async () => {
 export const signUp = async (username: string, avatarUrl: string, password: string, email: string) => {
     // const responseUpload = await uploadImage(image);
 
+    
     const response = await fetch(`${BASE_URL}/auth/signup`, {
         body: JSON.stringify({
             username,
@@ -68,7 +73,10 @@ export const signUp = async (username: string, avatarUrl: string, password: stri
             email,
             avatarUrl
         }),
-        method: "POST"
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        }
     });
 
     if (!response.ok) {

@@ -20,7 +20,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       // handle sign up logic
       onLogin(username, avatarUrl);
     } else {
-      login(email, password)
+      login(username, password)
       onLogin(username, avatarUrl);
     }
   };
