@@ -1,20 +1,29 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { craeteNewUser } from "../dal/user.dal";
 import jwt from "jsonwebtoken";
+import { generateTokens, saveRefreshToken } from "../utils/token.util";
 
 export const googleCallBack = async (req: Request, res: Response) => {
-  const user = req.user;
-  const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
-    expiresIn: "1h",
-  });
+  const user: any = req.user;
+  const tokens = generateTokens(user);
+  await saveRefreshToken(user.id, tokens.refreshToken);
 
-  res.cookie("jwt", token, { httpOnly: true, secure: true });
+  res.cookie(
+    process.env.REFRESH_TOKEN_COOKIE_NAME as string,
+    tokens.refreshToken,
+    {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+    }
+  );
+
   res.redirect("/");
 };
 
 export const localLoginCallBack = async (req: Request, res: Response) => {
-  const user = req.user;
-  const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
+  const user: any = req.user;
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
     expiresIn: "1h",
   });
 
