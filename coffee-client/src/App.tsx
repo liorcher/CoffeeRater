@@ -6,6 +6,7 @@ import Post from './components/Post';
 import Navbar from './components/Navbar';
 import LoginPage from './components/LoginPage';
 import './App.css';
+import {getPostsWithComments} from './services/coffeeApi'
 
 const App: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -13,10 +14,7 @@ const App: React.FC = () => {
   const [userAvatar, setUserAvatar] = useState<string>('https://via.placeholder.com/40');
 
   useEffect(() => {
-    fetch('https://fake-coffee-api.vercel.app/api')
-      .then(response => response.json())
-      .then(data => setPosts(data))
-      .catch(error => console.error('Error fetching data:', error));
+    getPostsWithComments().then(posts => setPosts(posts));
   }, []);
 
   const handleLogin = (username: string) => {
@@ -39,9 +37,9 @@ const App: React.FC = () => {
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/" element={
           <div className="App">
-            {posts.map((post, index) => (
+            {posts.map(post => (
               <Post
-                key={index}
+                key={post._id}
                 name={post.name}
                 description={post.description}
                 price={post.price}
@@ -52,10 +50,8 @@ const App: React.FC = () => {
                 roastLevel={post.roast_level}
                 imageUrl={post.image_url}
                 comments={post.comments || []}
-                time="Today"
-                author="coffee_lover"
-                avatarUrl={userAvatar}
                 currentUser={currentUser}
+                currentUserAvatar={userAvatar}
               />
             ))}
           </div>

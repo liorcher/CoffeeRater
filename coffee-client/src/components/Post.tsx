@@ -5,12 +5,13 @@ import Comment from './Comment';
 import CommentForm from './CommentForm';
 import './Post.css';
 
-interface Comment {
+interface CommentData {
   id: number;
-  text: string;
   author: string;
-  time: string;
+  text: string;
   avatarUrl: string;
+  time: string;
+  rating: number;
 }
 
 interface PostProps {
@@ -23,11 +24,9 @@ interface PostProps {
   grindOption: string[];
   roastLevel: number;
   imageUrl: string;
-  comments: Comment[];
-  time: string;
-  author: string;
-  avatarUrl: string;
+  comments: CommentData[];
   currentUser: string | null;
+  currentUserAvatar: string | null;
 }
 
 const Post: React.FC<PostProps> = ({
@@ -41,60 +40,76 @@ const Post: React.FC<PostProps> = ({
   roastLevel,
   imageUrl,
   comments,
-  time,
-  author,
-  avatarUrl,
-  currentUser
+  currentUser,
+  currentUserAvatar
 }) => {
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
-  const [editedCommentText, setEditedCommentText] = useState<string>('');
+  const [postComments, setPostComments] = useState(comments);
 
-  const handleAddComment = (text: string) => {
-    // Handle adding a comment
+  const handleAddComment = (text: string, rating: number) => {
+    const newComment: CommentData = {
+      id: postComments.length + 1,
+      author: currentUser!,
+      text,
+      avatarUrl: 'https://via.placeholder.com/40',
+      time: 'Just now',
+      rating,
+    };
+    setPostComments([...postComments, newComment]);
   };
 
-  const handleEditComment = (id: number, text: string) => {
-    // Handle editing a comment
-    setEditingCommentId(null);
+  const handleEditComment = (id: number, newText: string, newRating: number) => {
+    setPostComments(
+      postComments.map((comment) =>
+        comment.id === id ? { ...comment, text: newText, rating: newRating } : comment
+      )
+    );
   };
 
   const handleDeleteComment = (id: number) => {
-    // Handle deleting a comment
+    setPostComments(postComments.filter((comment) => comment.id !== id));
   };
 
   return (
     <div className="post">
-      <div className="post-header">
-        <div className="post-header-text">
-          <h1>{name}</h1>
-        </div>
-      </div>
-      <img src={imageUrl} alt={name} className="post-image" />
-      <div className="post-content">
+      <img src={imageUrl} alt="Post" className="post-image" />
+      <div className="post-body">
+        <h3>{name}</h3>
         <p>{description}</p>
-        <p><strong>Price:</strong> ${price.toFixed(2)}</p>
-        <p><strong>Region:</strong> {region}</p>
-        <p><strong>Weight:</strong> {weight}g</p>
-        <p><strong>Flavor Profile:</strong> {flavorProfile.join(', ')}</p>
-        <p><strong>Grind Options:</strong> {grindOption.join(', ')}</p>
-        <p><strong>Roast Level:</strong> {roastLevel}</p>
+        <p>
+          <strong>Price:</strong> ${price}
+        </p>
+        <p>
+          <strong>Region:</strong> {region}
+        </p>
+        <p>
+          <strong>Weight:</strong> {weight}g
+        </p>
+        <p>
+          <strong>Flavor Profile:</strong> {flavorProfile.join(', ')}
+        </p>
+        <p>
+          <strong>Grind Options:</strong> {grindOption.join(', ')}
+        </p>
+        <p>
+          <strong>Roast Level:</strong> {roastLevel}
+        </p>
       </div>
       <div className="post-comments">
-        {comments.map(comment => (
+        {postComments.map((comment) => (
           <Comment
             key={comment.id}
-            id={comment.id}
-            text={comment.text}
             author={comment.author}
-            time={comment.time}
+            text={comment.text}
             avatarUrl={comment.avatarUrl}
-            isCurrentUser={comment.author === currentUser}
-            onEdit={id => setEditingCommentId(id)}
-            onDelete={id => handleDeleteComment(id)}
+            time={comment.time}
+            rating={comment.rating}
+            canEdit={currentUser === comment.author}
+            onEdit={(newText, newRating) => handleEditComment(comment.id, newText, newRating)}
+            onDelete={() => handleDeleteComment(comment.id)}
           />
         ))}
-        <CommentForm onSubmit={text => handleAddComment(text)} />
       </div>
+      {currentUser && currentUserAvatar && <CommentForm onAddComment={handleAddComment} userAvatar={currentUserAvatar} />}
     </div>
   );
 };
