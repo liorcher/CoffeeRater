@@ -11,7 +11,7 @@ export const uploadImage = async (req: Request, res: Response) => {
 
 export const getImage = async (req: Request, res: Response) => {
   const { filename } = req.params;
-  const filePath = path.join(__dirname, "..", "uploads", filename);
+  const filePath = path.join(__dirname, "../..", "uploads", filename);
 
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {
