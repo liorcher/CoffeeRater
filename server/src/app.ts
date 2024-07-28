@@ -27,6 +27,8 @@ app.use(
 
 // Middleware to parse JSON requests
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // Middleware to parse cookies
 app.use(cookieParser());

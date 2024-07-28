@@ -1,7 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { craeteNewUser } from "../dal/user.dal";
-import jwt from 'jsonwebtoken';
-
+import jwt from "jsonwebtoken";
 
 export const googleCallBack = async (req: Request, res: Response) => {
   const user = req.user;
@@ -24,10 +23,8 @@ export const localLoginCallBack = async (req: Request, res: Response) => {
 };
 
 export const registerUser = async (req: Request, res: Response) => {
-  const { userName, firstName, lastName, email, password } = req.body;
-
-  // Add function to save image and create path
-  let imageUrl = "";
+  const { userName, firstName, lastName, email, password, avatarUrl } =
+    req.body;
 
   try {
     await craeteNewUser(
@@ -37,7 +34,7 @@ export const registerUser = async (req: Request, res: Response) => {
         lastName,
         email,
       },
-      imageUrl,
+      avatarUrl,
       password
     );
 

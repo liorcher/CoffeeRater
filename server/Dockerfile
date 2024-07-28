@@ -22,6 +22,8 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
+RUN mkdir uploads
+
 # Copy the built files from the builder stage
 COPY --from=builder /app/dist /app/dist
 
