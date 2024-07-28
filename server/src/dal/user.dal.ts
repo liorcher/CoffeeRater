@@ -21,7 +21,7 @@ export const craeteNewUser = async (
   }
 };
 
-export const updateUser = async (
+export const updateUserDetails = async (
   { userName, avatarUrl, firstName, lastName, email }: UserBasicData,
   userId: string
 ) => {

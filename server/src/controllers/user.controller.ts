@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getUserById } from "../dal/user.dal";
+import { getUserById, updateUserDetails } from "../dal/user.dal";
 
 export const getUserDetails = async (req: Request, res: Response) => {
   const { userId } = req.body;
@@ -14,10 +14,21 @@ export const getUserDetails = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  const { userId,userName, firstName, lastName, email, password, avatarUrl } = req.body;
+  const { userId, userName, firstName, lastName, email, avatarUrl } = req.body;
 
   try {
-    
+    let updatedUser = await updateUserDetails(
+      {
+        userName,
+        firstName,
+        lastName,
+        email,
+        avatarUrl,
+      },
+      userId
+    );
+
+    res.json(updatedUser);
   } catch (err) {
     res.status(500).send(`Error updating user ${userId}.`);
   }
