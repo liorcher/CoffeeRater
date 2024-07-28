@@ -1,33 +1,35 @@
 // src/components/StarRating.tsx
 
 import React, { useState } from 'react';
-import './starRating.css';
+import './StarRating.css';
 
 interface StarRatingProps {
   rating: number;
-  onRatingChange: (rating: number) => void;
+  onRatingChange?: (rating: number) => void;
+  readOnly?: boolean;
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ rating, onRatingChange }) => {
-  const [hover, setHover] = useState(0);
+const StarRating: React.FC<StarRatingProps> = ({ rating, onRatingChange, readOnly }) => {
+  const [hoverRating, setHoverRating] = useState(0);
+  const handleRatingChange = (newRating: number) => {
+    if (onRatingChange && !readOnly) {
+      onRatingChange(newRating);
+    }
+  };
 
   return (
     <div className="star-rating">
-      {[...Array(5)].map((star, index) => {
-        index += 1;
-        return (
-          <button
-            type="button"
-            key={index}
-            className={index <= (hover || rating) ? "on" : "off"}
-            onClick={() => onRatingChange(index)}
-            onMouseEnter={() => setHover(index)}
-            onMouseLeave={() => setHover(rating)}
-          >
-            <span className="star">&#9733;</span>
-          </button>
-        );
-      })}
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          onMouseEnter={() => setHoverRating(star)}
+          onMouseLeave={() => setHoverRating(0)}
+          key={star}
+          className={`star ${star<=hoverRating ||star <= rating ? 'filled' : ''}`}
+          onClick={() => handleRatingChange(star)}
+        >
+          &#9733;
+        </span>
+      ))}
     </div>
   );
 };

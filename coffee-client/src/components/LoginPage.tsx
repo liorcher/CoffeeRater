@@ -1,92 +1,78 @@
-// src/pages/LoginPage.tsx
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
+import {signUp, login, loginWithGoogle} from '../services/authFetchApi'
 
 interface LoginPageProps {
-  onLogin: (username: string) => void;
+  onLogin: (username: string, avatarUrl: string) => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const navigate = useNavigate();
+  const [avatarUrl, setAvatarUrl] = useState('https://via.placeholder.com/40');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isLogin) {
-      // Handle login logic here
-      onLogin(email);
+    if (isSignUp) {
+      signUp(username, avatarUrl, password, email)
+      // handle sign up logic
+      onLogin(username, avatarUrl);
     } else {
-      // Handle sign-up logic here
-      onLogin(username);
+      login(email, password)
+      onLogin(username, avatarUrl);
     }
-    navigate('/');
   };
 
-  const handleSocialLogin = (provider: string) => {
-    // Handle social login here
-    console.log(`Logging in with ${provider}`);
-    onLogin(provider);
-    navigate('/');
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target && event.target.result) {
+          setAvatarUrl(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
   return (
     <div className="login-page">
-      <div className="login-form">
-        <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
-        <form onSubmit={handleSubmit}>
-          {!isLogin && (
-            <label>
-              Username:
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
-                required
-              />
-            </label>
-          )}
-          <label>
-            Email:
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter email"
-              required
-            />
-          </label>
-          <label>
-            Password:
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              required
-            />
-          </label>
-          <button type="submit">{isLogin ? 'Login' : 'Sign Up'}</button>
-        </form>
-        <div className="social-login">
-          <button onClick={() => handleSocialLogin('Facebook')} className="facebook-button">
-            Login with Facebook
-          </button>
-          <button onClick={() => handleSocialLogin('Google')} className="google-button">
-            Login with Google
-          </button>
-        </div>
-        <div className="toggle-link">
-          <span onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? 'Need an account? Sign up' : 'Already have an account? Login'}
-          </span>
-        </div>
-      </div>
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h2>{isSignUp ? 'Sign Up' : 'Log In'}</h2>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
+        />
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+        />
+        {isSignUp && (
+          <>
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            <img src={avatarUrl} alt="Avatar Preview" className="avatar-preview" />
+          </>
+        )}
+        <button type="submit">{isSignUp ? 'Sign Up' : 'Log In'}</button>
+        <p onClick={() => setIsSignUp(!isSignUp)}>
+          {isSignUp ? 'Already have an account? Log In' : "Don't have an account? Sign Up"}
+        </p>
+      </form>
     </div>
   );
 };
