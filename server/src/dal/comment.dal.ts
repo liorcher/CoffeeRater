@@ -1,10 +1,10 @@
-import Comment, { commentData } from "../models/comment";
+import { Comment, commentData } from "../models/comment";
 
 export const getComentsByPostId = async (postId: string) => {
   try {
     return Comment.find({ postId: postId });
   } catch (error: any) {
-    throw new Error(`Error fetching users: ${error.message}`);
+    throw new Error();
   }
 };
 

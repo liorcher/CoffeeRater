@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import Comment from "../models/comment";
 import {
   createNewComment,
   deleteComment,
@@ -59,7 +58,7 @@ export const getPostComments = async (req: Request, res: Response) => {
 
     res.json(postComments);
   } catch (err) {
-    res.status(500).send(`Error retriving user ${user.userId}.`);
+    res.status(500).send(`Error retriving post Comments.`);
   }
 };
 
