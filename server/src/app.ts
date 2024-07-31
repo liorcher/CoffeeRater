@@ -14,6 +14,7 @@ import { connectToDatabase } from "./services/database.service";
 import passport from "./services/auth.service";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 const app: Express = express();
 
@@ -33,7 +34,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Security middleware
-app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    imgSrc: ["'self'", "data:", "https://iili.io"],
+    connectSrc: ["'self'", "https://fake-coffee-api.vercel.app"],
+    fontSrc: ["'self'"],
+    objectSrc: ["'none'"],
+    upgradeInsecureRequests: [],
+  },
+}));
 
 // CORS middleware
 app.use(cors());
@@ -58,6 +70,14 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Router Config
 app.use("/api/v1", routes);
+
+
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Handle all other routes by serving the React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
 
 // Connect to MongoDB
 connectToDatabase();
