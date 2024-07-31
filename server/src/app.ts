@@ -12,8 +12,8 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { connectToDatabase } from "./services/database.service";
 import passport from "./services/auth.service";
-import session from 'express-session';
-import cookieParser from 'cookie-parser';
+import session from "express-session";
+import cookieParser from "cookie-parser";
 
 const app: Express = express();
 
@@ -27,8 +27,7 @@ app.use(
 
 // Middleware to parse JSON requests
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.urlencoded({ extended: false }));
 
 // Middleware to parse cookies
 app.use(cookieParser());
@@ -40,17 +39,18 @@ app.use(helmet());
 app.use(cors());
 
 // Session middleware
-app.use(session({
-  secret: 'your_secret_key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false }
-}));
+app.use(
+  session({
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
 
 // Initialize Passport and restore authentication state, if any, from the session
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 // Swagger Config
 const specs = swaggerJsdoc(swaggerOptions);
