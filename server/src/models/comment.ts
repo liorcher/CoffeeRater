@@ -30,6 +30,4 @@ const commentSchema = new Schema({
   isDeleted: { type: Boolean, required: true, default: true },
 });
 
-const Comment = model<IComment>("Comment", commentSchema);
-
-export default Comment;
+export const Comment = model<IComment>("Comment", commentSchema);
