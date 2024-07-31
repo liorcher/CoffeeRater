@@ -18,36 +18,44 @@ export const googleCallBack = async (req: Request, res: Response) => {
     }
   );
 
-  res.redirect("/");
+  res.json({ token: tokens.accessToken });
 };
 
 export const localLoginCallBack = async (req: Request, res: Response) => {
   const user: any = req.user;
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
-    expiresIn: "1h",
-  });
+  const tokens = generateTokens(user);
+  await saveRefreshToken(user.id, tokens.refreshToken);
 
-  res.cookie("jwt", token, { httpOnly: true, secure: true });
-  res.redirect("/");
+  res.cookie(
+    process.env.REFRESH_TOKEN_COOKIE_NAME as string,
+    tokens.refreshToken,
+    {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+    }
+  );
+
+  res.json({ token: tokens.accessToken });
 };
 
 export const registerUser = async (req: Request, res: Response) => {
-  const { userName, firstName, lastName, email, password, avatarUrl } =
+  const { username, firstname, lastname, email, password, avatarUrl } =
     req.body;
 
   try {
     await craeteNewUser(
       {
-        userName,
-        firstName,
-        lastName,
+        userName: username,
+        firstName: "lior",
+        lastName: "cher",
         email,
       },
       avatarUrl,
       password
     );
 
-    res.redirect("/api/v1/auth/login");
+    res.status(200).send("successfully login");
   } catch (err) {
     res.status(500).send("Error registering new user.");
   }

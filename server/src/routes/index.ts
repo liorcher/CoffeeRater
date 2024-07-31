@@ -6,8 +6,8 @@ import uploadRoutes from "./upload.routes";
 
 const router = Router();
 
-router.use("/comment", commentsRoutes);
-router.use("/user", usersRoutes);
+router.use("/comments", commentsRoutes);
+router.use("/users", usersRoutes);
 router.use("/auth", authRoutes);
 router.use("/images", uploadRoutes);
 
