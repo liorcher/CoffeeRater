@@ -4,9 +4,9 @@ const options: Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Prompt Service',
+      title: 'Coffee Rater Api',
       version: '1.0.0',
-      description: 'Advanced service - chatGPT Prompt engineering',
+      description: 'Coffee Rater Api',
     },
     servers: [
       {
