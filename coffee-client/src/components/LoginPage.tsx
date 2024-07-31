@@ -1,80 +1,105 @@
 import React, { useState } from 'react';
-import './LoginPage.css';
-import {signUp, login, loginWithGoogle} from '../services/authFetchApi'
+import { useNavigate } from 'react-router-dom';
+import { login, loginWithGoogle, signUp } from '../services/authFetchApi'
+import { useUser } from '../userContext';
 
-interface LoginPageProps {
-  onLogin: (username: string, avatarUrl: string) => void;
-}
+import './LoginPage.css'
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+const Login: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('https://via.placeholder.com/40');
+  const [email, setEmail] = useState('');
+  const [photo, setPhoto] = useState<File | null>(null);
+  const navigate = useNavigate();
+  const { setUser } = useUser()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isSignUp) {
-      signUp(username, avatarUrl, password, email)
-      // handle sign up logic
-      onLogin(username, avatarUrl);
+      // Handle sign-up logic here
+      signUp(username, photo, password, email).then(() => {
+        login(username, password).then((response) => {
+          setUser({
+            username: response.username,
+            avatar: response.avatarUrl
+          })
+          navigate('/')
+        });
+      })
+      console.log('Sign up with:', { username, password, email, photo });
     } else {
-      login(email, password)
-      onLogin(username, avatarUrl);
+      login(username, password).then((response) => {
+        setUser({
+          username: response.username,
+          avatar: response.avatarUrl
+        })
+        navigate('/')
+      });
+      console.log('Sign in with:', { username, password });
     }
+    navigate('/');
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target && event.target.result) {
-          setAvatarUrl(event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
+  const handleGoogleSignIn = () => {
+    loginWithGoogle().then(() => navigate('/'))
   };
 
   return (
-    <div className="login-page">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>{isSignUp ? 'Sign Up' : 'Log In'}</h2>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        {isSignUp && (
-          <>
-            <input type="file" accept="image/*" onChange={handleImageUpload} />
-            <img src={avatarUrl} alt="Avatar Preview" className="avatar-preview" />
-          </>
-        )}
-        <button type="submit">{isSignUp ? 'Sign Up' : 'Log In'}</button>
+    <div className="login-container">
+      <div className="login-card">
+        <h2>{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
+        <button className="google-login-button" onClick={handleGoogleSignIn}>
+          Login with Google
+        </button>
+        <form onSubmit={handleSubmit}>
+          {isSignUp && (
+            <>
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setPhoto(e.target.files ? e.target.files[0] : null)}
+              />
+            </>
+          )}
+          {!isSignUp && (
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          )}
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
+        </form>
         <p onClick={() => setIsSignUp(!isSignUp)}>
-          {isSignUp ? 'Already have an account? Log In' : "Don't have an account? Sign Up"}
+          {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
         </p>
-      </form>
+      </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default Login;

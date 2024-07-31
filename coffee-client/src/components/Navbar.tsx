@@ -6,7 +6,7 @@ import './Navbar.css';
 import Modal from './Modal';
 
 interface NavbarProps {
-  currentUser: string | null;
+  currentUser: string | undefined;
   onLogout: () => void;
   onEditUser: (name: string, avatarUrl: string) => void;
 }

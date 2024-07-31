@@ -1,4 +1,3 @@
-
 const BASE_URL = 'https://localhost:9000/api/v1'
 
 const uploadImage = async (image: File) => {
@@ -25,16 +24,18 @@ export const loginWithGoogle = async () => {
     return response_json;
 };
 
-export const login = async (email: string, password: string) => {
+export const login = async (username: string, password: string) => {
     const response = await fetch(`${BASE_URL}/auth/login`, {
-        body: JSON.stringify({email, password: btoa(password)}),
+        body: JSON.stringify({ username, password: btoa(password) }),
         method: "POST"
     });
     if (!response.ok) {
         console.log(response)
+
         throw new Error('Failed to logout');
     }
     let response_json = await response.json()
+
     return response_json;
 };
 
@@ -58,15 +59,15 @@ export const logout = async () => {
     return response_json;
 };
 
-export const signUp = async (username: string, avatarUrl: string, password: string, email: string) => {
-    // const responseUpload = await uploadImage(image);
+export const signUp = async (username: string, photo: File | null, password: string, email: string) => {
+    const responseUpload = photo && await uploadImage(photo);
 
     const response = await fetch(`${BASE_URL}/auth/signup`, {
         body: JSON.stringify({
             username,
-            password,
+            password: btoa(password),
             email,
-            avatarUrl
+            avatarUrl: responseUpload && responseUpload.path
         }),
         method: "POST"
     });

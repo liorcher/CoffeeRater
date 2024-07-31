@@ -31,6 +31,22 @@
   margin-right: 10px;
 }
 
+.comment-form .photo-upload {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.comment-form .photo-upload input[type="file"] {
+  display: none;
+}
+
+.comment-form .photo-upload svg {
+  font-size: 20px;
+  color: #0095f6;
+}
+
 .comment-form button {
   background-color: #0095f6;
   color: #fff;

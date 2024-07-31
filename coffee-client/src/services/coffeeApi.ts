@@ -30,10 +30,10 @@ interface PostProps {
 
 export const getPostsWithComments = async () => {
   const posts = await fetchPosts();
-  const comments =  await getComments();
-  const postWithComments = posts.map(
-     (post: PostProps) => post.comments = comments.filter((
-       comment: Comment) => comment.postId === post._id)) 
+  // const comments =  await getComments();
+  // const postWithComments = posts.map(
+  //    (post: PostProps) => post.comments = comments.filter((
+  //      comment: Comment) => comment.postId === post._id)) 
   
-  return postWithComments 
+  return posts 
 }

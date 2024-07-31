@@ -12,6 +12,7 @@ interface CommentData {
   avatarUrl: string;
   time: string;
   rating: number;
+  photoUrl: string | null;
 }
 
 interface PostProps {
@@ -25,8 +26,8 @@ interface PostProps {
   roastLevel: number;
   imageUrl: string;
   comments: CommentData[];
-  currentUser: string | null;
-  currentUserAvatar: string | null;
+  currentUser: string | undefined;
+  currentUserAvatar: string | undefined;
 }
 
 const Post: React.FC<PostProps> = ({
@@ -45,12 +46,13 @@ const Post: React.FC<PostProps> = ({
 }) => {
   const [postComments, setPostComments] = useState(comments);
 
-  const handleAddComment = (text: string, rating: number) => {
+  const handleAddComment = (text: string, rating: number, photoUrl: string | null) => {
     const newComment: CommentData = {
       id: postComments.length + 1,
       author: currentUser!,
       text,
       avatarUrl: 'https://via.placeholder.com/40',
+      photoUrl,
       time: 'Just now',
       rating,
     };
@@ -102,6 +104,7 @@ const Post: React.FC<PostProps> = ({
             text={comment.text}
             avatarUrl={comment.avatarUrl}
             time={comment.time}
+            photoUrl={comment.photoUrl}
             rating={comment.rating}
             canEdit={currentUser === comment.author}
             onEdit={(newText, newRating) => handleEditComment(comment.id, newText, newRating)}
