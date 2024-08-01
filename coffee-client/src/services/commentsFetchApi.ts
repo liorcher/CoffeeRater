@@ -1,6 +1,6 @@
 import { CreateComment, UpdateComment} from '../models/comment';
 
-const BASE_URL = 'https://localhost:9000/api/v1'
+const BASE_URL = 'http://localhost:9000/api/v1'
 
 export const getComments = async () => {
     const response = await fetch(`${BASE_URL}/comments`);

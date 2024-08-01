@@ -12,8 +12,9 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { connectToDatabase } from "./services/database.service";
 import passport from "./services/auth.service";
-import session from 'express-session';
-import cookieParser from 'cookie-parser';
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import path from "path";
 
 const app: Express = express();
 
@@ -27,30 +28,41 @@ app.use(
 
 // Middleware to parse JSON requests
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.urlencoded({ extended: false }));
 
 // Middleware to parse cookies
 app.use(cookieParser());
 
 // Security middleware
-app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    imgSrc: ["'self'", "data:", "https://iili.io"],
+    connectSrc: ["'self'", "https://fake-coffee-api.vercel.app"],
+    fontSrc: ["'self'"],
+    objectSrc: ["'none'"],
+    upgradeInsecureRequests: [],
+  },
+}));
 
 // CORS middleware
 app.use(cors());
 
 // Session middleware
-app.use(session({
-  secret: 'your_secret_key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false }
-}));
+app.use(
+  session({
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
 
 // Initialize Passport and restore authentication state, if any, from the session
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 // Swagger Config
 const specs = swaggerJsdoc(swaggerOptions);
@@ -58,6 +70,14 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Router Config
 app.use("/api/v1", routes);
+
+
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Handle all other routes by serving the React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
 
 // Connect to MongoDB
 connectToDatabase();
