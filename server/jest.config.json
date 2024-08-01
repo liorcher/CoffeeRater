@@ -1,0 +1,11 @@
+{
+  "bail": 1,
+  "verbose": true,
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "setupFiles": ["**/tests/jest.setup.ts"],
+  "testMatch": ["**/tests/**/*.test.ts"],
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  }
+}
