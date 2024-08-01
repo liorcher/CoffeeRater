@@ -3,7 +3,7 @@ import { getUserDetails, updateUser } from "../controllers/user.controller";
 
 const router = Router();
 
-router.get("/details", getUserDetails);
+router.get("/details/:userId", getUserDetails);
 router.put("/update", updateUser);
 
 

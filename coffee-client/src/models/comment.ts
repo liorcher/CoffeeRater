@@ -1,27 +1,17 @@
 export interface CreateComment {
-    text: string;
-    userId: string;
+    content: string;
     rating: number;
-    time: string;
+    commentTime: string;
+    photoUrl: string | null;
     postId: string;
 };
 
 export interface UpdateComment {
-    text: string;
+    commentId: string;
+    content: string;
     rating: number;
     time: string;
 };
-
-export interface CommentProps {
-    id: string;
-    text: string;
-    author: string;
-    time: string;
-    avatarUrl: string;
-    isCurrentUser: boolean;
-    onEdit: (id: number) => void;
-    onDelete: (id: number) => void;
-}
 
 export interface Comment {
     text: string;

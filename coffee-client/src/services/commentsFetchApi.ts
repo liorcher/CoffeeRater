@@ -15,7 +15,10 @@ export const getComments = async () => {
 export const createComment = async (comment: CreateComment) => {
     const response = await fetch(`${BASE_URL}/comments/create`, {
         body: JSON.stringify(comment),
-        method: "POST"
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        }
     });
     if (!response.ok) {
         console.log(response)
@@ -26,7 +29,10 @@ export const createComment = async (comment: CreateComment) => {
 export const updateComment = async (comment: UpdateComment) => {
     const response = await fetch(`${BASE_URL}/comments/update`, {
         body: JSON.stringify(comment),
-        method: "PUT"
+        method: "PUT",
+        headers: {
+            "content-type": "application/json"
+        }
     });
     if (!response.ok) {
         console.log(response)

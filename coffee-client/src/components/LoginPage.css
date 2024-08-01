@@ -1,66 +1,67 @@
-/* src/components/LoginPage.css */
+/* src/pages/Login.css */
 
-.login-page {
+.login-container {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   height: 100vh;
   background-color: #fafafa;
 }
 
-.login-form {
-  background: #fff;
+.login-card {
+  background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
   text-align: center;
 }
 
-.login-form h2 {
+.login-card h2 {
   margin-bottom: 20px;
 }
 
-.login-form input[type="text"],
-.login-form input[type="password"],
-.login-form input[type="file"] {
+.google-login-button {
   width: 100%;
   padding: 10px;
-  margin: 10px 0;
+  background-color: #4285F4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form  input {
+  margin-bottom: 15px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
-}
-
-.login-form input[type="file"] {
-  padding: 5px;
-}
-
-.login-form .avatar-preview {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-top: 10px;
+  font-size: 14px;
 }
 
 .login-form button {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
   background-color: #0095f6;
   color: #fff;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
+  font-size: 16px;
   cursor: pointer;
-  width: 100%;
-  margin-top: 20px;
 }
 
-.login-form button:disabled {
-  background-color: #b2dffc;
-  cursor: not-allowed;
+.login-form button:hover {
+  background-color: #007bb5;
 }
 
 .login-form p {
-  margin-top: 10px;
+  color: #007bb5;
   cursor: pointer;
-  color: #0095f6;
+  margin-top: 15px;
 }

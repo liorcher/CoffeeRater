@@ -6,40 +6,39 @@ import Post from './components/Post';
 import Navbar from './components/Navbar';
 import LoginPage from './components/LoginPage';
 import './App.css';
+import { useUser } from './userContext';
 import {getPostsWithComments} from './services/coffeeApi'
 
 const App: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
-  const [currentUser, setCurrentUser] = useState<string | null>(null);
-  const [userAvatar, setUserAvatar] = useState<string>('https://via.placeholder.com/40');
+  const {user, setUser} = useUser()
+
 
   useEffect(() => {
     getPostsWithComments().then(posts => setPosts(posts));
   }, []);
 
-  const handleLogin = (username: string) => {
-    setCurrentUser(username);
-  };
-
   const handleLogout = () => {
-    setCurrentUser(null);
+    setUser(null);
   };
 
   const handleEditUser = (name: string, avatarUrl: string) => {
-    setCurrentUser(name);
-    setUserAvatar(avatarUrl);
+    setUser({
+      username: name, avatar: avatarUrl
+    })
   };
 
   return (
     <Router>
-      <Navbar currentUser={currentUser} onLogout={handleLogout} onEditUser={handleEditUser} />
+      <Navbar currentUser={user?.username} userAvatar={user?.avatar} onLogout={handleLogout} onEditUser={handleEditUser} />
       <Routes>
-        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={
           <div className="App">
             {posts.map(post => (
               <Post
                 key={post._id}
+                id={post._id}
                 name={post.name}
                 description={post.description}
                 price={post.price}
@@ -50,8 +49,8 @@ const App: React.FC = () => {
                 roastLevel={post.roast_level}
                 imageUrl={post.image_url}
                 comments={post.comments || []}
-                currentUser={currentUser}
-                currentUserAvatar={userAvatar}
+                currentUser={user?.username}
+                currentUserAvatar={user?.avatar}
               />
             ))}
           </div>
