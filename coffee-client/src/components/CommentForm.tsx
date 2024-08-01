@@ -7,7 +7,7 @@ import { FaCamera } from 'react-icons/fa';
 
 interface CommentFormProps {
   onAddComment: (text: string, rating: number, photoUrl: string) => void;
-  userAvatar: string;
+  userAvatar: string | undefined;
 }
 
 const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) => {
@@ -39,7 +39,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) =
 
   return (
     <form className="comment-form" onSubmit={handleSubmit}>
-      <img src={userAvatar} alt="User Avatar" className="avatar" />
+      <img src={userAvatar ? userAvatar : "https://via.placeholder.com/40"} alt="User Avatar" className="avatar" />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}

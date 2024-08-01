@@ -39,12 +39,12 @@ import { getUserById, updateUserDetails } from "../dal/user.dal";
  *         description: Error retrieving user details.
  */
 export const getUserDetails = async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  const { userId } = req.params;
 
   try {
     let userDetails = await getUserById(userId);
-
-    res.json(userDetails);
+    console.log(userDetails)
+    res.json(userDetails[0]);
   } catch (err) {
     res.status(500).send(`Error retriving user ${userId}.`);
   }

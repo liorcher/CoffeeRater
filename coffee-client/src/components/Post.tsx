@@ -4,9 +4,11 @@ import React, { useState } from 'react';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
 import './Post.css';
+import { CreateComment, UpdateComment } from '../models/comment';
+import { createComment, updateComment, deleteComment } from '../services/commentsFetchApi';
 
 interface CommentData {
-  id: number;
+  id: string;
   author: string;
   text: string;
   avatarUrl: string;
@@ -16,6 +18,7 @@ interface CommentData {
 }
 
 interface PostProps {
+  id: string;
   name: string;
   description: string;
   price: number;
@@ -31,6 +34,7 @@ interface PostProps {
 }
 
 const Post: React.FC<PostProps> = ({
+  id,
   name,
   description,
   price,
@@ -46,29 +50,29 @@ const Post: React.FC<PostProps> = ({
 }) => {
   const [postComments, setPostComments] = useState(comments);
 
-  const handleAddComment = (text: string, rating: number, photoUrl: string | null) => {
-    const newComment: CommentData = {
-      id: postComments.length + 1,
-      author: currentUser!,
-      text,
-      avatarUrl: 'https://via.placeholder.com/40',
+  const handleAddComment = (content: string, rating: number, photoUrl: string | null) => {
+    const newComment: CreateComment = {
+      postId: id,
+      content,
       photoUrl,
-      time: 'Just now',
+      commentTime: Date.now().toString(),
       rating,
     };
-    setPostComments([...postComments, newComment]);
+    createComment(newComment);
   };
 
-  const handleEditComment = (id: number, newText: string, newRating: number) => {
-    setPostComments(
-      postComments.map((comment) =>
-        comment.id === id ? { ...comment, text: newText, rating: newRating } : comment
-      )
-    );
+  const handleEditComment = (id: string, newText: string, newRating: number) => {
+    const newComment: UpdateComment = {
+      commentId: id,
+      content: newText,
+      rating: newRating,
+      time: Date.now().toString()
+    }
+    updateComment(newComment)
   };
 
-  const handleDeleteComment = (id: number) => {
-    setPostComments(postComments.filter((comment) => comment.id !== id));
+  const handleDeleteComment = (id: string) => {
+    deleteComment(id)
   };
 
   return (
@@ -112,7 +116,7 @@ const Post: React.FC<PostProps> = ({
           />
         ))}
       </div>
-      {currentUser && currentUserAvatar && <CommentForm onAddComment={handleAddComment} userAvatar={currentUserAvatar} />}
+      {currentUser && <CommentForm onAddComment={handleAddComment} userAvatar={currentUserAvatar} />}
     </div>
   );
 };

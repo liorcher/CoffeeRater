@@ -30,7 +30,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <Navbar currentUser={user?.username} onLogout={handleLogout} onEditUser={handleEditUser} />
+      <Navbar currentUser={user?.username} userAvatar={user?.avatar} onLogout={handleLogout} onEditUser={handleEditUser} />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={
@@ -38,6 +38,7 @@ const App: React.FC = () => {
             {posts.map(post => (
               <Post
                 key={post._id}
+                id={post._id}
                 name={post.name}
                 description={post.description}
                 price={post.price}

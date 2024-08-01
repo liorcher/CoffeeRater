@@ -1,9 +1,14 @@
+import {jwtDecode} from 'jwt-decode'
 const BASE_URL = 'http://localhost:9000/api/v1'
 
 const uploadImage = async (image: File) => {
+    debugger
     const response = await fetch(`${BASE_URL}/images/upload`, {
         body: image,
-        method: "POST"
+        method: "POST",
+        headers: {
+            "content-type": "file"
+        }
     });
     debugger
 
@@ -25,10 +30,12 @@ export const loginWithGoogle = async () => {
     let response_json = await response.json()
     return response_json;
 };
-
+interface token {
+    id: string
+}
 export const login = async (username: string, password: string) => {
     const response = await fetch(`${BASE_URL}/auth/login`, {
-        body: JSON.stringify({username, password: password}),
+        body: JSON.stringify({username, password: btoa(password)}),
         method: "POST",
         headers: {
             "content-type": "application/json"
@@ -41,16 +48,19 @@ export const login = async (username: string, password: string) => {
     }
     let response_json = await response.json()
 
-    return response_json;
+    const jwt_decode = jwtDecode<token>(response_json.token)
+
+    return getUserDetails(jwt_decode.id);
 };
 
-export const getUserDetails = async () => {
-    const response = await fetch(`${BASE_URL}/users/details`);
+export const getUserDetails = async (userId: string) => {
+    const response = await fetch(`${BASE_URL}/users/details/${userId}`);
     if (!response.ok) {
         console.log(response)
         throw new Error('Failed to fetch user details');
     }
     let response_json = await response.json()
+    console.log(response_json)
     return response_json;
 };
 
@@ -73,7 +83,7 @@ export const signUp = async (username: string, photo: File | null, password: str
             username,
             password: btoa(password),
             email,
-            avatarUrl: responseUpload && responseUpload.path
+            avatarUrl: null
         }),
         method: "POST",
         headers: {

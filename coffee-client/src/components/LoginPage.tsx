@@ -21,7 +21,7 @@ const Login: React.FC = () => {
       signUp(username, photo, password, email).then(() => {
         login(username, password).then((response) => {
           setUser({
-            username: response.username,
+            username: response.userName,
             avatar: response.avatarUrl
           })
           navigate('/')
@@ -31,9 +31,10 @@ const Login: React.FC = () => {
     } else {
       login(username, password).then((response) => {
         setUser({
-          username: response.username,
+          username: response.userName,
           avatar: response.avatarUrl
         })
+        debugger
         navigate('/')
       });
       console.log('Sign in with:', { username, password });
@@ -52,7 +53,7 @@ const Login: React.FC = () => {
         <button className="google-login-button" onClick={handleGoogleSignIn}>
           Login with Google
         </button>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='login-form '>
           {isSignUp && (
             <>
               <input

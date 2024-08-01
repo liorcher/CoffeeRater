@@ -37,6 +37,5 @@ export const getPostsWithComments = async () => {
     return post;
   });
 
-  debugger;
   return postWithComments;
 };

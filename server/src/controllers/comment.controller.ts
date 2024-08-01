@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   createNewComment,
   deleteComment,
-  getComentsByPostId,
+  getComments,
   updateComment,
 } from "../dal/comment.dal";
 
@@ -50,11 +50,10 @@ import {
  *         description: Error retrieving comments.
  */
 export const getPostComments = async (req: Request, res: Response) => {
-  const user: any = req.user;
-  const { postId } = req.body;
-
+  // const user: any = req.user;
+  console.log("hi")
   try {
-    const postComments = await getComentsByPostId(postId);
+    const postComments = await getComments();
 
     res.json(postComments);
   } catch (err) {

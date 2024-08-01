@@ -122,9 +122,9 @@ export const registerUser = async (req: Request, res: Response) => {
       avatarUrl,
       password
     );
-
-    res.status(200).send("successfully login");
+    res.status(200).send("successfully log on");
   } catch (err) {
+    console.log("error", err)
     res.status(500).send("Error registering new user.");
   }
 };

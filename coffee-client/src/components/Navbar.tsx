@@ -7,11 +7,12 @@ import Modal from './Modal';
 
 interface NavbarProps {
   currentUser: string | undefined;
+  userAvatar: string | undefined;
   onLogout: () => void;
   onEditUser: (name: string, avatarUrl: string) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentUser, onLogout, onEditUser }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentUser, userAvatar, onLogout, onEditUser }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, onLogout, onEditUser }) =>
           {currentUser ? (
             <>
               <button className="avatar-button" onClick={toggleMenu}>
-                <img src="https://via.placeholder.com/40" alt="User Avatar" />
+                <img src={userAvatar ? userAvatar : "https://via.placeholder.com/40"} alt="User Avatar" />
               </button>
               {showMenu && (
                 <div className="dropdown-menu">

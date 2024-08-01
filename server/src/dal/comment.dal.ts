@@ -1,8 +1,8 @@
 import { Comment, commentData } from "../models/comment";
 
-export const getComentsByPostId = async (postId: string) => {
+export const getComments = async () => {
   try {
-    return Comment.find({ postId: postId });
+    return Comment.find({});
   } catch (error: any) {
     throw new Error();
   }
