@@ -5,6 +5,7 @@ const uploadImage = async (image: File) => {
         body: image,
         method: "POST"
     });
+    debugger
 
     if (!response.ok) {
         console.log(response)
@@ -15,6 +16,7 @@ const uploadImage = async (image: File) => {
 }
 
 export const loginWithGoogle = async () => {
+    debugger
     const response = await fetch(`${BASE_URL}/auth/google`);
     if (!response.ok) {
         console.log(response)
