@@ -3,21 +3,20 @@ axios.defaults.withCredentials = true;
 
 const BASE_URL = "http://localhost:9000/api/v1";
 
-const uploadImage = async (image: File) => {
-  const response = await fetch(`${BASE_URL}/images/upload`, {
-    body: image,
-    method: "POST",
+const uploadImage = async (image: FormData) => {
+  const response = await axios.post(`${BASE_URL}/images/upload`, image, {
     headers: {
-      "content-type": "file",
+      "Content-Type": "multipart/form-data",
     },
+    withCredentials: true,
   });
 
-  if (!response.ok) {
+  if (!response.status) {
     console.log(response);
     throw new Error("Failed to upload image");
   }
 
-  return await response.json();
+  return response.data.path;
 };
 
 export const loginWithGoogle = async () => {
@@ -48,17 +47,17 @@ export const logout = async () => {
 
 export const signUp = async (
   username: string,
-  photo: File | null,
+  photo: FormData,
   password: string,
   email: string
 ) => {
-  // const responseUpload = photo && (await uploadImage(photo));
+  const filePath = photo && (await uploadImage(photo));
 
   const response = await axios.post(`${BASE_URL}/auth/signup`, {
     username,
     password: btoa(password),
     email,
-    avatarUrl: null,
+    avatarUrl: filePath,
   });
 
   await login(username, password);
