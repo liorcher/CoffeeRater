@@ -3,7 +3,7 @@ axios.defaults.withCredentials = true;
 
 const BASE_URL = "http://localhost:9000/api/v1";
 
-const uploadImage = async (image: FormData) => {
+export const uploadImage = async (image: FormData) => {
   const response = await axios.post(`${BASE_URL}/images/upload`, image, {
     headers: {
       "Content-Type": "multipart/form-data",

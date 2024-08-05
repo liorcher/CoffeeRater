@@ -114,9 +114,6 @@ export const registerUser = async (req: Request, res: Response) => {
     await craeteNewUser(
       {
         userName: username,
-        firstName: "lior",
-        lastName: "cher",
-        email,
       },
       avatarUrl,
       password

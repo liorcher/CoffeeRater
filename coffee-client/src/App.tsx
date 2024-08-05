@@ -53,20 +53,23 @@ const App: React.FC = () => {
   };
 
   const handleEditUser = (name: string, avatarUrl: string) => {
-    debugger
-    setUser({
-      userName: name, avatarUrl: avatarUrl
+    axios.put('http://localhost:9000/api/v1/users/update', {
+      ...user,
+      userName: name,
+      avatarUrl: avatarUrl
+    }).then(({ data }) => {
+      debugger
+      setUser(data);
     })
   };
 
   return (
     <Router>
-      <Navbar currentUser={user?.userName} userAvatar={user?.avatarUrl} onLogout={handleLogout} onEditUser={handleEditUser} />
+      <Navbar currentUser={user} userAvatar={user?.avatarUrl} onLogout={handleLogout} onEditUser={handleEditUser} />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={
           <div className="App">
-            {user ? (<h2>Welcome {user.userName}</h2>) : (<h2>Not Logged IN</h2>)}
             {posts.map(post => (
               <Post
                 key={post._id}

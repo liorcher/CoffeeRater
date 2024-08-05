@@ -110,9 +110,6 @@ export const updateUser = async (req: Request, res: Response) => {
     let updatedUser = await updateUserDetails(
       {
         userName,
-        firstName,
-        lastName,
-        email,
         avatarUrl,
       },
       userId
