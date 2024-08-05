@@ -12,34 +12,16 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const navigate = useNavigate();
-  const { setUser } = useUser()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isSignUp) {
       // Handle sign-up logic here
-      signUp(username, photo, password, email).then(() => {
-        login(username, password).then((response) => {
-          setUser({
-            userName: response.userName,
-            avatar: response.avatarUrl
-          })
-          navigate('/')
-        });
-      })
-      console.log('Sign up with:', { username, password, email, photo });
+      signUp(username, photo, password, email).then(()=> navigate('/'))
     } else {
-      login(username, password).then((response) => {
-        setUser({
-          userName: response.userName,
-          avatar: response.avatarUrl
-        })
-        debugger
-        navigate('/')
-      });
-      console.log('Sign in with:', { username, password });
+      login(username, password).then(()=> navigate('/'))
     }
-    navigate('/');
+    
   };
 
   const handleGoogleSignIn = () => {

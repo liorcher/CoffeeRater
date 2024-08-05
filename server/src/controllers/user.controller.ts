@@ -41,11 +41,17 @@ import jwt from "jsonwebtoken";
  */
 export const getUserDetails = async (req: Request, res: Response) => {
   const token = req.cookies.refreshToken;
-
   if (!token) return res.json({ loggedIn: false });
-  const payload = jwt.verify(token, process.env.JWT_SECRET as string);
 
-  res.json({ loggedIn: true, payload });
+  try {
+    const payload = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+    res.json({ loggedIn: true, payload });
+  } catch (err) {
+    res.status(500).send(`Error returning user.`);
+  }
 };
 
 /**

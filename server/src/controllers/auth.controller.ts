@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { craeteNewUser } from "../dal/user.dal";
-import jwt from "jsonwebtoken";
 import { generateTokens, saveRefreshToken } from "../utils/token.util";
 
 /**
@@ -28,7 +27,7 @@ export const googleCallBack = async (req: Request, res: Response) => {
 
   res.cookie(
     process.env.REFRESH_TOKEN_COOKIE_NAME as string,
-    tokens.accessToken,
+    tokens.refreshToken,
     {
       httpOnly: false,
       secure: false,
@@ -66,13 +65,13 @@ export const localLoginCallBack = async (req: Request, res: Response) => {
     process.env.REFRESH_TOKEN_COOKIE_NAME as string,
     tokens.refreshToken,
     {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
-      sameSite: "strict",
+      sameSite: "lax",
     }
   );
 
-  res.json({ token: tokens.accessToken });
+  res.status(200).send();
 };
 
 /**
@@ -149,6 +148,7 @@ export const logoutUser = async (
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string);
+    res.redirect("http://localhost:3000");
   });
 };

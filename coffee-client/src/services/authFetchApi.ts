@@ -1,8 +1,9 @@
-import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+axios.defaults.withCredentials = true;
+
 const BASE_URL = "http://localhost:9000/api/v1";
 
 const uploadImage = async (image: File) => {
-  debugger;
   const response = await fetch(`${BASE_URL}/images/upload`, {
     body: image,
     method: "POST",
@@ -10,7 +11,6 @@ const uploadImage = async (image: File) => {
       "content-type": "file",
     },
   });
-  debugger;
 
   if (!response.ok) {
     console.log(response);
@@ -24,38 +24,16 @@ export const loginWithGoogle = async () => {
   window.location.href = `${BASE_URL}/auth/google`;
 };
 
-interface token {
-  id: string;
-}
 export const login = async (username: string, password: string) => {
-  const response = await fetch(`${BASE_URL}/auth/login`, {
-    body: JSON.stringify({ username, password: btoa(password) }),
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
+  const res = await axios.post(`${BASE_URL}/auth/login`, {
+    username: username,
+    password: btoa(password),
   });
-  if (!response.ok) {
-    console.log(response);
 
+  if (!res.status) {
+    console.log(res);
     throw new Error("Failed to login");
   }
-  let response_json = await response.json();
-
-  const jwt_decode = jwtDecode<token>(response_json.token);
-
-  return getUserDetails(jwt_decode.id);
-};
-
-export const getUserDetails = async (userId: string) => {
-  const response = await fetch(`${BASE_URL}/users/details/${userId}`);
-  if (!response.ok) {
-    console.log(response);
-    throw new Error("Failed to fetch user details");
-  }
-  let response_json = await response.json();
-  console.log(response_json);
-  return response_json;
 };
 
 export const logout = async () => {
@@ -74,22 +52,18 @@ export const signUp = async (
   password: string,
   email: string
 ) => {
-  const responseUpload = photo && (await uploadImage(photo));
+  // const responseUpload = photo && (await uploadImage(photo));
 
-  const response = await fetch(`${BASE_URL}/auth/signup`, {
-    body: JSON.stringify({
-      username,
-      password: btoa(password),
-      email,
-      avatarUrl: null,
-    }),
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
+  const response = await axios.post(`${BASE_URL}/auth/signup`, {
+    username,
+    password: btoa(password),
+    email,
+    avatarUrl: null,
   });
 
-  if (!response.ok) {
+  await login(username, password);
+
+  if (!response.status) {
     console.log(response);
     throw new Error("Failed to sign up");
   }

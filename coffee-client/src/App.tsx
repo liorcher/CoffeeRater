@@ -20,7 +20,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     getPostsWithComments().then(posts => setPosts(posts));
-  }, []);
+  }, [setPosts]);
 
   useEffect(() => {
     const token = Cookies.get('refreshToken');
@@ -28,30 +28,40 @@ const App: React.FC = () => {
     if (token) {
       axios('http://localhost:9000/api/v1/users/details', {
         method: 'GET'
-      })
-        .then(({ data }) => {
-          const user: any = data.payload.user
-          setUser(user);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+      }).then(({ data }) => {
+        console.log(data);
+
+        const user: any = data.payload.user
+        setUser(user);
+      }).catch(error => {
+        console.error('Error:', error);
+      });
     }
   }, [setUser]);
 
   const handleLogout = () => {
+
     setUser(null);
+    axios('http://localhost:9000/api/v1/auth/logout', {
+      method: 'GET'
+    }).then(({ data }) => {
+      const user: any = data.payload.user
+      setUser(user);
+    }).catch(error => {
+      console.error('Error:', error);
+    });
   };
 
   const handleEditUser = (name: string, avatarUrl: string) => {
+    debugger
     setUser({
-      userName: name, avatar: avatarUrl
+      userName: name, avatarUrl: avatarUrl
     })
   };
 
   return (
     <Router>
-      <Navbar currentUser={user?.userName} userAvatar={user?.avatar} onLogout={handleLogout} onEditUser={handleEditUser} />
+      <Navbar currentUser={user?.userName} userAvatar={user?.avatarUrl} onLogout={handleLogout} onEditUser={handleEditUser} />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={
@@ -72,7 +82,7 @@ const App: React.FC = () => {
                 imageUrl={post.image_url}
                 comments={post.comments || []}
                 currentUser={user?.userName}
-                currentUserAvatar={user?.avatar}
+                currentUserAvatar={user?.avatarUrl}
               />
             ))}
           </div>
