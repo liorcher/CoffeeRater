@@ -25,15 +25,11 @@ export const findRefreshToken = async (token: string) => {
 };
 
 export const generateTokens = (user: any) => {
-  const accessToken = jwt.sign(
-    { id: user.id },
-    process.env.JWT_SECRET as string,
-    {
-      expiresIn: "15m",
-    }
-  );
+  const accessToken = jwt.sign({ user }, process.env.JWT_SECRET as string, {
+    expiresIn: "15m",
+  });
   const refreshToken = jwt.sign(
-    { id: user.id },
+    { user },
     process.env.REFRESH_TOKEN_SECRET as string,
     {
       expiresIn: "7d",

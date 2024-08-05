@@ -28,15 +28,15 @@ export const googleCallBack = async (req: Request, res: Response) => {
 
   res.cookie(
     process.env.REFRESH_TOKEN_COOKIE_NAME as string,
-    tokens.refreshToken,
+    tokens.accessToken,
     {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
-      sameSite: "strict",
+      sameSite: "lax",
     }
   );
 
-  res.json({ token: tokens.accessToken });
+  res.redirect("http://localhost:3000/");
 };
 
 /**
@@ -124,7 +124,7 @@ export const registerUser = async (req: Request, res: Response) => {
     );
     res.status(200).send("successfully log on");
   } catch (err) {
-    console.log("error", err)
+    console.log("error", err);
     res.status(500).send("Error registering new user.");
   }
 };

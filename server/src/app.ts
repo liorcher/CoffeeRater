@@ -34,21 +34,28 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Security middleware
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    scriptSrc: ["'self'"],
-    styleSrc: ["'self'", "'unsafe-inline'"],
-    imgSrc: ["'self'", "data:", "https://iili.io"],
-    connectSrc: ["'self'", "https://fake-coffee-api.vercel.app"],
-    fontSrc: ["'self'"],
-    objectSrc: ["'none'"],
-    upgradeInsecureRequests: [],
-  },
-}));
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https://iili.io"],
+      connectSrc: ["'self'", "https://fake-coffee-api.vercel.app"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  })
+);
 
 // CORS middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", 'http://localhost:9000'], // Allow your front-end origin
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  })
+);
 
 // Session middleware
 app.use(
@@ -71,8 +78,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 // Router Config
 app.use("/api/v1", routes);
 
-
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, "../public")));
 
 // Handle all other routes by serving the React app
 // app.get('*', (req, res) => {
