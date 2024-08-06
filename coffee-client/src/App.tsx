@@ -19,11 +19,10 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
-    getPostsWithComments().then(posts => setPosts(posts => posts));
-  }, [setPosts]);
+    getPostsWithComments().then(posts => setPosts(posts));
+  }, []);
 
-  useEffect(() => {
-console.log('bla')  }, [posts]);
+
 
   useEffect(() => {
     const token = Cookies.get('refreshToken');
@@ -43,9 +42,11 @@ console.log('bla')  }, [posts]);
   }, [setUser, user]);
 
   const updatePosts = async () => {
-    console.log('E');
-    await getPostsWithComments().then(posts => setPosts(posts));
+    setPosts([])
+    const newposts = await getPostsWithComments()
+    setPosts(newposts)
   }
+
   const handleLogout = () => {
 
     setUser(null);
