@@ -22,7 +22,9 @@ const uploadImage = async (image: File) => {
 
 export const loginWithGoogle = async () => {
     debugger
-    const response = await fetch(`${BASE_URL}/auth/google`);
+    const response = await fetch(`${BASE_URL}/auth/google`, {
+        credentials: 'include'
+    });
     if (!response.ok) {
         console.log(response)
         throw new Error('Failed to logout');
@@ -39,7 +41,8 @@ export const login = async (username: string, password: string) => {
         method: "POST",
         headers: {
             "content-type": "application/json"
-        }
+        },
+        credentials: 'include'
     });
     if (!response.ok) {
         console.log(response)

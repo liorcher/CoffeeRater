@@ -93,6 +93,8 @@ export const createComment = async (req: Request, res: Response) => {
   const user: any = req.user;
   const { postId, content, rating, commentTime } = req.body;
 
+  console.log(user)
+  console.log(req.body)
   try {
     const newComment = createNewComment({
       postId,
