@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import Modal from './Modal';
+import { User } from '../userContext';
 
 interface NavbarProps {
-  currentUser: string | undefined;
+  currentUser: User | null;
   userAvatar: string | undefined;
   onLogout: () => void;
   onEditUser: (name: string, avatarUrl: string) => void;
@@ -71,7 +72,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, userAvatar, onLogout, onEd
           )}
         </div>
       </nav>
-      <Modal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
+      <Modal currentUser={currentUser} isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
     </>
   );
 };

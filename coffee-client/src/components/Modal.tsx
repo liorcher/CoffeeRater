@@ -2,27 +2,36 @@
 
 import React, { useState } from 'react';
 import './Modal.css';
+import { User } from '../userContext';
+import { uploadImage } from '../services/authFetchApi';
 
 interface ModalProps {
+  currentUser: User | null;
   isOpen: boolean;
   onClose: () => void;
   onSave: (name: string, avatarUrl: string) => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSave }) => {
-  const [name, setName] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+const Modal: React.FC<ModalProps> = ({ currentUser, isOpen, onClose, onSave }) => {
+  const [name, setName] = useState((() => currentUser?.userName));
+  const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setAvatarFile(file);
-      setAvatarUrl(URL.createObjectURL(file));
+    if (e.target.files) {
+      setFile(e.target.files[0]);
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (!name || !file) {
+      return
+    }
+
+    const photoFormData = new FormData();
+    photoFormData.append('image', file);
+
+    const avatarUrl = await uploadImage(photoFormData)
+
     onSave(name, avatarUrl);
     onClose();
   };
@@ -43,9 +52,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSave }) => {
         </label>
         <label>
           Avatar:
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
         </label>
-        {avatarUrl && <img src={avatarUrl} alt="Avatar Preview" />}
         <button onClick={handleSave}>Save</button>
         <button onClick={onClose}>Cancel</button>
       </div>

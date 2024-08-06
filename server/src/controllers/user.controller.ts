@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getUserById, updateUserDetails } from "../dal/user.dal";
+import jwt from "jsonwebtoken";
 
 /**
  * @swagger
@@ -39,14 +40,17 @@ import { getUserById, updateUserDetails } from "../dal/user.dal";
  *         description: Error retrieving user details.
  */
 export const getUserDetails = async (req: Request, res: Response) => {
-  const { userId } = req.params;
+  const token = req.cookies.refreshToken;
+  if (!token) return res.json({ loggedIn: false });
 
   try {
-    let userDetails = await getUserById(userId);
-    console.log(userDetails)
-    res.json(userDetails[0]);
+    const payload = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+    res.json({ loggedIn: true, payload });
   } catch (err) {
-    res.status(500).send(`Error retriving user ${userId}.`);
+    res.status(500).send(`Error returning user.`);
   }
 };
 
@@ -106,9 +110,6 @@ export const updateUser = async (req: Request, res: Response) => {
     let updatedUser = await updateUserDetails(
       {
         userName,
-        firstName,
-        lastName,
-        email,
         avatarUrl,
       },
       userId

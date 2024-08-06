@@ -6,31 +6,66 @@ import Post from './components/Post';
 import Navbar from './components/Navbar';
 import LoginPage from './components/LoginPage';
 import './App.css';
+import Cookies from 'js-cookie';
 import { useUser } from './userContext';
-import {getPostsWithComments} from './services/coffeeApi'
+import { getPostsWithComments } from './services/coffeeApi'
+import axios from 'axios';
+
+axios.defaults.withCredentials = true
 
 const App: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
-  const {user, setUser} = useUser()
+  const { user, setUser } = useUser()
 
 
   useEffect(() => {
     getPostsWithComments().then(posts => setPosts(posts));
-  }, []);
+  }, [setPosts]);
+
+  useEffect(() => {
+    const token = Cookies.get('refreshToken');
+
+    if (token) {
+      axios('http://localhost:9000/api/v1/users/details', {
+        method: 'GET'
+      }).then(({ data }) => {
+        console.log(data);
+
+        const user: any = data.payload.user
+        setUser(user);
+      }).catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  }, [setUser]);
 
   const handleLogout = () => {
+
     setUser(null);
+    axios('http://localhost:9000/api/v1/auth/logout', {
+      method: 'GET'
+    }).then(({ data }) => {
+      const user: any = data.payload.user
+      setUser(user);
+    }).catch(error => {
+      console.error('Error:', error);
+    });
   };
 
   const handleEditUser = (name: string, avatarUrl: string) => {
-    setUser({
-      username: name, avatar: avatarUrl
+    axios.put('http://localhost:9000/api/v1/users/update', {
+      ...user,
+      userName: name,
+      avatarUrl: avatarUrl
+    }).then(({ data }) => {
+      debugger
+      setUser(data);
     })
   };
 
   return (
     <Router>
-      <Navbar currentUser={user?.username} userAvatar={user?.avatar} onLogout={handleLogout} onEditUser={handleEditUser} />
+      <Navbar currentUser={user} userAvatar={user?.avatarUrl} onLogout={handleLogout} onEditUser={handleEditUser} />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={
@@ -49,8 +84,8 @@ const App: React.FC = () => {
                 roastLevel={post.roast_level}
                 imageUrl={post.image_url}
                 comments={post.comments || []}
-                currentUser={user?.username}
-                currentUserAvatar={user?.avatar}
+                currentUser={user?.userName}
+                currentUserAvatar={user?.avatarUrl}
               />
             ))}
           </div>
