@@ -6,7 +6,7 @@ import './Comment.css';
 
 interface CommentProps {
   author: string;
-  text: string;
+  content: string;
   avatarUrl: string;
   time: string;
   rating: number;
@@ -18,7 +18,7 @@ interface CommentProps {
 
 const Comment: React.FC<CommentProps> = ({
   author,
-  text,
+  content,
   avatarUrl,
   time,
   rating,
@@ -28,7 +28,7 @@ const Comment: React.FC<CommentProps> = ({
   onDelete,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(text);
+  const [editText, setEditText] = useState(content);
   const [editRating, setEditRating] = useState(rating);
   const [editPhotoUrl, setEditPhotoUrl] = useState(photoUrl);
 
@@ -58,19 +58,11 @@ const Comment: React.FC<CommentProps> = ({
           <span className="comment-time">{time}</span>
           <StarRating rating={isEditing ? editRating : rating} onRatingChange={setEditRating} readOnly={!isEditing} />
         </div>
+        {photoUrl && <img src={photoUrl} alt="Comment" className="comment-photo" />}
         {isEditing ? (
           <textarea value={editText} onChange={(e) => setEditText(e.target.value)} />
         ) : (
-          <p>{text}</p>
-        )}
-        {photoUrl && <img src={photoUrl} alt="Comment" className="comment-photo" />}
-        {isEditing && (
-          <>
-            <label className="photo-upload">
-              <input type="file" accept="image/*" onChange={handlePhotoUpload} />
-            </label>
-            {editPhotoUrl && <img src={editPhotoUrl} alt="Edit Comment" className="comment-photo" />}
-          </>
+          <p>{content}</p>
         )}
         {canEdit && (
           <div className="comment-actions">

@@ -2,7 +2,7 @@ export interface CreateComment {
     content: string;
     rating: number;
     commentTime: string;
-    photoUrl: string | null;
+    photo: FormData | null;
     postId: string;
 };
 
@@ -10,10 +10,11 @@ export interface UpdateComment {
     commentId: string;
     content: string;
     rating: number;
-    time: string;
+    commentTime: string;
 };
 
 export interface Comment {
+    commentId: string;
     text: string;
     userId: string;
     rating: number;

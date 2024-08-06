@@ -8,9 +8,9 @@ import { CreateComment, UpdateComment } from '../models/comment';
 import { createComment, updateComment, deleteComment } from '../services/commentsFetchApi';
 
 interface CommentData {
-  id: string;
+  commentId: string;
   author: string;
-  text: string;
+  content: string;
   avatarUrl: string;
   time: string;
   rating: number;
@@ -31,6 +31,7 @@ interface PostProps {
   comments: CommentData[];
   currentUser: string | undefined;
   currentUserAvatar: string | undefined;
+  onCommentChange: any;
 }
 
 const Post: React.FC<PostProps> = ({
@@ -46,19 +47,20 @@ const Post: React.FC<PostProps> = ({
   imageUrl,
   comments,
   currentUser,
-  currentUserAvatar
+  currentUserAvatar,
+  onCommentChange
 }) => {
   const [postComments, setPostComments] = useState(comments);
 
-  const handleAddComment = (content: string, rating: number, photoUrl: string | null) => {
+  const handleAddComment = (content: string, rating: number, photo: FormData | null) => {
     const newComment: CreateComment = {
       postId: id,
       content,
-      photoUrl,
+      photo,
       commentTime: Date.now().toString(),
       rating,
     };
-    createComment(newComment);
+    createComment(newComment).then(onCommentChange);
   };
 
   const handleEditComment = (id: string, newText: string, newRating: number) => {
@@ -66,13 +68,13 @@ const Post: React.FC<PostProps> = ({
       commentId: id,
       content: newText,
       rating: newRating,
-      time: Date.now().toString()
+      commentTime: Date.now().toString()
     }
-    updateComment(newComment)
+    updateComment(newComment).then(onCommentChange)
   };
 
   const handleDeleteComment = (id: string) => {
-    deleteComment(id)
+    deleteComment(id).then(onCommentChange)
   };
 
   return (
@@ -103,16 +105,16 @@ const Post: React.FC<PostProps> = ({
       <div className="post-comments">
         {postComments.map((comment) => (
           <Comment
-            key={comment.id}
+            key={comment.commentId}
             author={comment.author}
-            text={comment.text}
+            content={comment.content}
             avatarUrl={comment.avatarUrl}
             time={comment.time}
             photoUrl={comment.photoUrl}
             rating={comment.rating}
             canEdit={currentUser === comment.author}
-            onEdit={(newText, newRating) => handleEditComment(comment.id, newText, newRating)}
-            onDelete={() => handleDeleteComment(comment.id)}
+            onEdit={(newText, newRating) => handleEditComment(comment.commentId, newText, newRating)}
+            onDelete={() => handleDeleteComment(comment.commentId)}
           />
         ))}
       </div>

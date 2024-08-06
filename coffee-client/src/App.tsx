@@ -86,6 +86,7 @@ const App: React.FC = () => {
                 comments={post.comments || []}
                 currentUser={user?.userName}
                 currentUserAvatar={user?.avatarUrl}
+                onCommentChange={() => getPostsWithComments().then(posts => setPosts(posts))}
               />
             ))}
           </div>

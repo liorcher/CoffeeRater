@@ -5,6 +5,7 @@ export type commentData = {
   commentId?: String;
   postId?: String;
   userId?: String;
+  photoUrl?: String;
   content?: String;
   rating?: Number;
   commentTime?: Date;
@@ -21,13 +22,14 @@ const commentSchema = new Schema({
     unique: true,
     required: true,
   },
+  photoUrl: {type: String, required: false},
   postId: { type: String, required: true },
-  userId: { type: String, required: true },
+  userId: { type: String, ref: 'user', required: true },
   content: { type: String, required: true },
   rating: { type: Number, required: false },
   commentTime: { type: Date, required: true },
   updateTime: { type: Date, required: false },
-  isDeleted: { type: Boolean, required: true, default: true },
+  isDeleted: { type: Boolean, required: true, default: false },
 });
 
 export const Comment = model<IComment>("Comment", commentSchema);
