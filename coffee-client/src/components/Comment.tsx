@@ -12,7 +12,7 @@ interface CommentProps {
   rating: number;
   photoUrl: string | null;
   canEdit: boolean;
-  onEdit: (newText: string, newRating: number, newPhotoUrl: string | null) => void;
+  onEdit: (newText: string, newRating: number) => void;
   onDelete: () => void;
 }
 
@@ -30,23 +30,10 @@ const Comment: React.FC<CommentProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(content);
   const [editRating, setEditRating] = useState(rating);
-  const [editPhotoUrl, setEditPhotoUrl] = useState(photoUrl);
 
   const handleEdit = () => {
-    onEdit(editText, editRating, editPhotoUrl);
+    onEdit(editText, editRating);
     setIsEditing(false);
-  };
-
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target && event.target.result) {
-          setEditPhotoUrl(event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
   };
 
   return (

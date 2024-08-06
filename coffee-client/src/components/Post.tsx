@@ -52,7 +52,7 @@ const Post: React.FC<PostProps> = ({
 }) => {
   const [postComments, setPostComments] = useState(comments);
 
-  const handleAddComment = (content: string, rating: number, photo: FormData | null) => {
+  const handleAddComment = async (content: string, rating: number, photo: FormData | null) => {
     const newComment: CreateComment = {
       postId: id,
       content,
@@ -60,21 +60,21 @@ const Post: React.FC<PostProps> = ({
       commentTime: Date.now().toString(),
       rating,
     };
-    createComment(newComment).then(onCommentChange);
+    await createComment(newComment).then(onCommentChange);
   };
 
-  const handleEditComment = (id: string, newText: string, newRating: number) => {
+  const handleEditComment = async (id: string, newText: string, newRating: number) => {
     const newComment: UpdateComment = {
       commentId: id,
       content: newText,
       rating: newRating,
       commentTime: Date.now().toString()
     }
-    updateComment(newComment).then(onCommentChange)
+    await updateComment(newComment).then(onCommentChange)
   };
 
-  const handleDeleteComment = (id: string) => {
-    deleteComment(id).then(onCommentChange)
+  const handleDeleteComment = async (id: string) => {
+    await deleteComment(id).then(onCommentChange)
   };
 
   return (
