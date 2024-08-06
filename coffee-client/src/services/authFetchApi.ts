@@ -24,6 +24,7 @@ export const loginWithGoogle = async () => {
 };
 
 export const login = async (username: string, password: string) => {
+
   const res = await axios.post(`${BASE_URL}/auth/login`, {
     username: username,
     password: btoa(password),

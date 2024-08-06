@@ -36,9 +36,9 @@
 }
 
 .comment .comment-photo {
-  max-width: 100%;
+  max-width: 20%;
   border-radius: 8px;
-  margin-top: 10px;
+  margin: 10px;
 }
 
 .comment .comment-actions {

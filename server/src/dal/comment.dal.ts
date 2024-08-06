@@ -1,9 +1,21 @@
 import { Comment, commentData } from "../models/comment";
+import User, { IUser, UserBasicData } from "../models/user";
 
 export const getComments = async () => {
   try {
-    return Comment.find({});
+    const comments = await Comment.find({ isDeleted: { $ne: true } });
+
+    const commentsWithUsers = await Promise.all(comments.map(async (comment) => {
+      const user = await User.findOne({ userId: comment.userId });
+      return {
+        ...comment.toObject(),
+        avatarUrl: user && user.avatarUrl,
+        author: user && user.userName
+      };
+    }))
+    return commentsWithUsers
   } catch (error: any) {
+    console.log(error)
     throw new Error();
   }
 };
@@ -14,6 +26,7 @@ export const createNewComment = async (commentData: commentData) => {
       postId: commentData.postId,
       userId: commentData.userId,
       content: commentData.content,
+      photoUrl: commentData.photoUrl,
       rating: commentData.rating,
       commentTime: commentData.commentTime,
     });
@@ -26,17 +39,17 @@ export const createNewComment = async (commentData: commentData) => {
 
 export const updateComment = async (commentData: commentData) => {
   try {
-    const updatedComment = new Comment({
-      commentId: commentData.commentId,
-      postId: commentData.postId,
-      userId: commentData.userId,
-      content: commentData.content,
-      rating: commentData.rating,
-      commentTime: commentData.commentTime,
-      updateTime: new Date(),
-    });
-
-    return await updatedComment.save();
+    const result = await Comment.updateOne(
+      { commentId: commentData.commentId },
+      {
+        $set: {
+          content: commentData.content,
+          rating: commentData.rating,
+          commentTime: commentData.commentTime
+        }
+      }
+    )
+    console.log(result)
   } catch (error: any) {
     throw new Error(`Error updating comment: ${error.message}`);
   }
@@ -44,18 +57,14 @@ export const updateComment = async (commentData: commentData) => {
 
 export const deleteComment = async (commentData: commentData) => {
   try {
-    const deleteComment = new Comment({
-      commentId: commentData.commentId,
-      postId: commentData.postId,
-      userId: commentData.userId,
-      content: commentData.content,
-      rating: commentData.rating,
-      commentTime: commentData.commentTime,
-      updateTime: new Date(),
-      isDeleted: true,
-    });
-
-    return await deleteComment.save();
+    const result = await Comment.updateOne(
+      { commentId: commentData.commentId },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    )
   } catch (error: any) {
     throw new Error(`Error deleting comment: ${error.message}`);
   }

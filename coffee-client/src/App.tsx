@@ -19,8 +19,11 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
-    getPostsWithComments().then(posts => setPosts(posts));
+    getPostsWithComments().then(posts => setPosts(posts => posts));
   }, [setPosts]);
+
+  useEffect(() => {
+console.log('bla')  }, [posts]);
 
   useEffect(() => {
     const token = Cookies.get('refreshToken');
@@ -39,6 +42,10 @@ const App: React.FC = () => {
     }
   }, [setUser, user]);
 
+  const updatePosts = async () => {
+    console.log('E');
+    await getPostsWithComments().then(posts => setPosts(posts));
+  }
   const handleLogout = () => {
 
     setUser(null);
@@ -86,6 +93,7 @@ const App: React.FC = () => {
                 comments={post.comments || []}
                 currentUser={user?.userName}
                 currentUserAvatar={user?.avatarUrl}
+                onCommentChange={updatePosts}
               />
             ))}
           </div>

@@ -5,6 +5,8 @@ import {
   getComments,
   updateComment,
 } from "../dal/comment.dal";
+import jwt from "jsonwebtoken";
+
 
 /**
  * @swagger
@@ -50,8 +52,7 @@ import {
  *         description: Error retrieving comments.
  */
 export const getPostComments = async (req: Request, res: Response) => {
-  // const user: any = req.user;
-  console.log("hi")
+
   try {
     const postComments = await getComments();
 
@@ -90,21 +91,25 @@ export const getPostComments = async (req: Request, res: Response) => {
  *         description: Error creating comment.
  */
 export const createComment = async (req: Request, res: Response) => {
-  const user: any = req.user;
-  const { postId, content, rating, commentTime } = req.body;
-
+  const token = req.cookies.refreshToken;
+  const { postId, content, rating, commentTime, photo } = req.body;
   try {
+    const payload: any = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
     const newComment = createNewComment({
       postId,
-      userId: user.userId,
+      userId: payload.user.userId,
       content,
+      photoUrl: photo,
       rating,
       commentTime,
     });
 
     res.json(newComment);
   } catch (err) {
-    res.status(500).send(`Error retriving user ${user.userId}.`);
+    res.status(500).send(`Error creating comment.`);
   }
 };
 
@@ -137,13 +142,16 @@ export const createComment = async (req: Request, res: Response) => {
  *         description: Error updating comment.
  */
 export const updateCommentRoute = async (req: Request, res: Response) => {
-  const user: any = req.user;
-  const { postId, content, rating, commentTime } = req.body;
-
+  const token = req.cookies.refreshToken;
+  const { commentId, content, rating, commentTime } = req.body;
   try {
+    const payload: any = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    ); 
     const updatedComment = updateComment({
-      postId,
-      userId: user.userId,
+      commentId,
+      userId: payload.user.userId,
       content,
       rating,
       commentTime,
@@ -151,7 +159,7 @@ export const updateCommentRoute = async (req: Request, res: Response) => {
 
     res.json(updatedComment);
   } catch (err) {
-    res.status(500).send(`Error retriving user ${user.userId}.`);
+    res.status(500).send(`Error updating comment.`);
   }
 };
 
@@ -184,20 +192,15 @@ export const updateCommentRoute = async (req: Request, res: Response) => {
  *         description: Error deleting comment.
  */
 export const deleteCommentRoute = async (req: Request, res: Response) => {
-  const user: any = req.user;
-  const { postId, content, rating, commentTime } = req.body;
+  const { commentId } = req.params;
 
   try {
     const deletedComment = deleteComment({
-      postId,
-      userId: user.userId,
-      content,
-      rating,
-      commentTime,
+      commentId
     });
 
     res.json(deletedComment);
   } catch (err) {
-    res.status(500).send(`Error retriving user ${user.userId}.`);
+    res.status(500).send(`Error deleteing comment`);
   }
 };

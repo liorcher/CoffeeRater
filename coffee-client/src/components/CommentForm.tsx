@@ -6,34 +6,35 @@ import './CommentForm.css';
 import { FaCamera } from 'react-icons/fa';
 
 interface CommentFormProps {
-  onAddComment: (text: string, rating: number, photoUrl: string) => void;
+  onAddComment: (text: string, rating: number, photo: FormData) => void;
   userAvatar: string | undefined;
 }
 
 const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) => {
   const [text, setText] = useState('');
   const [rating, setRating] = useState(0);
-  const [photoUrl, setPhotoUrl] = useState('');
+  const [photo, setPhoto] = useState<File | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (text.trim() || photoUrl) {
-      onAddComment(text, rating, photoUrl);
+
+    if (!photo) {
+      return;
+    }
+
+    const photoFormData = new FormData();
+    photoFormData.append('image', photo);
+    if (text.trim()) {
+      onAddComment(text, rating, photoFormData);
       setText('');
       setRating(0);
-      setPhotoUrl('');
+      setPhoto(null);
     }
   };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target && event.target.result) {
-          setPhotoUrl(event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
+    if (e.target.files) {
+      setPhoto(e.target.files[0]);
     }
   };
 
@@ -44,14 +45,14 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) =
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Add a comment..."
-        required={!photoUrl}
+        required={!photo}
       />
       <StarRating rating={rating} onRatingChange={setRating} />
       <label className="photo-upload">
         <FaCamera />
         <input type="file" accept="image/*" onChange={handlePhotoUpload} />
       </label>
-      <button type="submit" disabled={!text.trim() && !photoUrl}>Post</button>
+      <button type="submit" disabled={!text.trim() && !photo}>Post</button>
     </form>
   );
 };
