@@ -1,16 +1,13 @@
 import User, { IUser, UserBasicData } from "../models/user";
 
 export const craeteNewUser = async (
-  { userName, firstName, lastName, email }: UserBasicData,
+  { userName }: UserBasicData,
   avatarUrl: string,
   password?: string
 ) => {
   try {
     const user = new User({
       userName,
-      firstName,
-      lastName,
-      email,
       password,
       avatarUrl,
     });
@@ -22,20 +19,21 @@ export const craeteNewUser = async (
 };
 
 export const updateUserDetails = async (
-  { userName, avatarUrl, firstName, lastName, email }: UserBasicData,
+  { userName, avatarUrl }: UserBasicData,
   userId: string
 ) => {
   try {
-    const user = new User({
-      userId,
-      userName,
-      firstName,
-      lastName,
-      email,
-      avatarUrl,
-    });
+    const result = await User.findOneAndUpdate(
+      { userId: userId },
+      {
+        $set: {
+          userName,
+          avatarUrl,
+        },
+      }
+    );
 
-    return await user.save();
+    return result;
   } catch (error: any) {
     throw new Error(`Error saving user: ${userId} ,${error.message}`);
   }

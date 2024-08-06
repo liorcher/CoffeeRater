@@ -6,9 +6,6 @@ export type UserBasicData = {
   userId?: string;
   userName: string;
   avatarUrl?: string | null;
-  firstName: string;
-  lastName: string;
-  email: string;
 };
 
 export type IUser = UserBasicData &
@@ -26,9 +23,6 @@ const userSchema: Schema<IUser> = new Schema({
   },
   userName: { type: String, required: true },
   avatarUrl: { type: String, required: false },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true },
   password: { type: String, required: true },
 });
 

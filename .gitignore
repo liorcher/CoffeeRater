@@ -130,3 +130,6 @@ dist
 .pnp.*
 
 **/.DS_Store
+
+# Ignore uploads directory
+/server/uploads/

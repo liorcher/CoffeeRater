@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login, loginWithGoogle, signUp } from '../services/authFetchApi'
-import { useUser } from '../userContext';
 
 import './LoginPage.css'
 
@@ -10,40 +9,36 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [photo, setPhoto] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+
   const navigate = useNavigate();
-  const { setUser } = useUser()
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSignUp) {
-      // Handle sign-up logic here
-      signUp(username, photo, password, email).then(() => {
-        login(username, password).then((response) => {
-          setUser({
-            username: response.userName,
-            avatar: response.avatarUrl
-          })
-          navigate('/')
-        });
-      })
-      console.log('Sign up with:', { username, password, email, photo });
-    } else {
-      login(username, password).then((response) => {
-        setUser({
-          username: response.userName,
-          avatar: response.avatarUrl
-        })
-        debugger
-        navigate('/')
-      });
-      console.log('Sign in with:', { username, password });
+
+    if (!file) {
+      return;
     }
-    navigate('/');
+
+    const photoFormData = new FormData();
+    photoFormData.append('image', file);
+
+    if (isSignUp) {
+      signUp(username, photoFormData, password, email).then(() => navigate('/'))
+    } else {
+      login(username, password).then(() => navigate('/'))
+    }
+
   };
 
   const handleGoogleSignIn = () => {
-    loginWithGoogle().then(() => navigate('/'))
+    loginWithGoogle()
   };
 
   return (
@@ -73,7 +68,7 @@ const Login: React.FC = () => {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => setPhoto(e.target.files ? e.target.files[0] : null)}
+                onChange={handleFileChange}
               />
             </>
           )}

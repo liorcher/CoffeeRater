@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-interface User {
-  username: string;
-  avatar: string;
+export interface User {
+  userName: string;
+  avatarUrl: string;
 }
 
 interface UserContextProps {
