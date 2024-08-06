@@ -25,7 +25,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const token = Cookies.get('refreshToken');
 
-    if (token) {
+    if (token && !user) {
       axios('http://localhost:9000/api/v1/users/details', {
         method: 'GET'
       }).then(({ data }) => {
@@ -37,7 +37,7 @@ const App: React.FC = () => {
         console.error('Error:', error);
       });
     }
-  }, [setUser]);
+  }, [setUser, user]);
 
   const handleLogout = () => {
 
