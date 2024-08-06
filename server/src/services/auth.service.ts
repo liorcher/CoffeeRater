@@ -32,9 +32,6 @@ passport.use(
             userId: profile.id,
             userName: profile.displayName,
             avatarUrl: profile.photos?.pop()?.value,
-            firstName: profile.name?.givenName,
-            lastName: profile.name?.familyName,
-            email: profile.emails?.pop()?.value,
           });
 
           await user.save();

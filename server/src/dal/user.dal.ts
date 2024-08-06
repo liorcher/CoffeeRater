@@ -30,6 +30,9 @@ export const updateUserDetails = async (
           userName,
           avatarUrl,
         },
+      },
+      {
+        new: true
       }
     );
 
