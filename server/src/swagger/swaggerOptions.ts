@@ -16,7 +16,7 @@ const options: Options = {
     ],
     servers: [
       {
-        url: 'http://localhost:3000/api/v1',
+        url: 'https://node24.cs.colman.ac.il/api/v1',
       },
     ],
   },
