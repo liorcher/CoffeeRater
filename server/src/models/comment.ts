@@ -1,6 +1,13 @@
 import { Date, Number, Schema, model } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
+export type childComment = {
+  childCommentId?: String;
+  userId?: String;
+  content?: String;
+  commentTime?: Date;
+};
+
 export type commentData = {
   commentId?: String;
   postId?: String;
@@ -10,6 +17,7 @@ export type commentData = {
   rating?: Number;
   commentTime?: Date;
   updateTime?: Date;
+  childComments?: childComment[];
   isDeleted?: Boolean;
 };
 
@@ -22,13 +30,19 @@ const commentSchema = new Schema({
     unique: true,
     required: true,
   },
-  photoUrl: {type: String, required: false},
+  photoUrl: { type: String, required: false },
   postId: { type: String, required: true },
   userId: { type: String, ref: 'user', required: true },
   content: { type: String, required: true },
   rating: { type: Number, required: false },
   commentTime: { type: Date, required: true },
   updateTime: { type: Date, required: false },
+  childComments: [new Schema({
+    childCommentId: { type: String, default: uuidv4, required: true },
+    userId: { type: String, required: true },
+    content: { type: String, required: true },
+    commentTime: { type: Date, required: true }
+  })],
   isDeleted: { type: Boolean, required: true, default: false },
 });
 

@@ -1,5 +1,6 @@
 import { getComments } from "./commentsFetchApi";
-import { Comment } from "../models/comment";
+import { CommentData } from "../models/comment";
+import { PostData } from "../models/post";
 const API_URL = "https://fake-coffee-api.vercel.app/api";
 
 export const fetchPosts = async () => {
@@ -12,31 +13,27 @@ export const fetchPosts = async () => {
   return response_json;
 };
 
-interface PostProps {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  region: string;
-  weight: number;
-  flavorProfile: string[];
-  grindOption: string[];
-  roastLevel: number;
-  imageUrl: string;
-  comments: Comment[];
-}
+
 
 export const getPostsWithComments = async () => {
   const posts = await fetchPosts();
   const comments = await getComments();
-  console.log("hi")
-  const postWithComments = posts.map((post: PostProps) => {
+  const postWithComments = posts.map((post: PostData) => {
     post.comments = comments.filter(
-      (comment: Comment) => comment.postId === post._id
+      (comment: CommentData) => comment.postId === post._id
     );
 
     return post;
   });
 
   return postWithComments;
+};
+
+export const getPostWithComment = async (postId: string, commentId: string) => {
+  const posts = await getPostsWithComments();
+  const post = posts.filter((post: PostData) => post._id === postId)[0];
+  console.log(post) 
+  post.comments = post.comments.filter((comment: CommentData) => comment.commentId === commentId)
+
+  return post;
 };

@@ -6,13 +6,10 @@ const BASE_URL = '/api/v1'
 
 export const getComments = async () => {
     const response = await fetch(`${BASE_URL}/comments`);
-    console.log(response);
     if (!response.ok) {
-        console.log(response)
         throw new Error('Failed to fetch comments');
     }
     let response_json = await response.json()
-    console.log(response_json)
     return response_json;
 };
 
@@ -46,7 +43,6 @@ export const deleteComment = async (commentId: string) => {
         method: "DELETE"
     });
     if (!response.ok) {
-        console.log(response)
         throw new Error('Failed to delete comment');
     }
 };

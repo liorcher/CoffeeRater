@@ -1,0 +1,47 @@
+.comment-details .post-image {
+  max-width: 40%;
+  border-radius: 8px;
+  margin: 10px;
+  margin: auto;
+  display: block;
+}
+
+.comment-details .comment-image {
+  max-width: 20%;
+  border-radius: 8px;  
+}
+
+
+.comment-details {
+  margin: 20px;
+  border-radius: 2%;
+  border: 1px solid #ddd;
+  padding: 3%;
+}
+
+.comment-details .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment-details .comment-content {
+  flex: 1;
+}
+
+.comment-details .comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.comment-details .comment-author {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.comment-details .comment-time {
+  color: #888;
+  margin-right: 10px;
+}

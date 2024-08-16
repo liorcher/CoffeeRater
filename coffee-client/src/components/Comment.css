@@ -41,6 +41,18 @@
   margin: 10px;
 }
 
+.comment .edit-comment {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  resize: none;
+  outline: none;
+  font-size: 14px;
+  margin-right: 10px;
+  background-color: #f0f0f0;
+}
+
 .comment .comment-actions {
   margin-top: 10px;
 }
@@ -62,4 +74,8 @@
 .comment .comment-actions button:disabled {
   background-color: #b2dffc;
   cursor: not-allowed;
+}
+
+.comment .comments {
+  color: gray;
 }

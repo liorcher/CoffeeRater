@@ -1,40 +1,26 @@
 // src/components/Comment.tsx
 
 import React, { useState } from 'react';
-import StarRating from './StarRating';
 import './Comment.css';
-
-import {CommentProps} from '../models/comment';
-import { useNavigate } from 'react-router-dom';
+import {ChildCommentProps} from '../models/childComment';
 
 
-const Comment: React.FC<CommentProps> = ({
-  commentId, 
-  postId,
+const Comment: React.FC<ChildCommentProps> = ({
   author,
   content,
   avatarUrl,
-  time,
-  rating,
-  photoUrl,
-  childComments,
+  commentTime,
   canEdit,
   onEdit,
   onDelete,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(content);
-  const [editRating, setEditRating] = useState(rating);
-  const navigate = useNavigate();
 
 
   const handleEdit = () => {
-    onEdit(editText, editRating);
+    onEdit(editText);
     setIsEditing(false);
-  };
-
-  const handleCommentClick = () => {
-    navigate(`/posts/${postId}/comments/${commentId}`);
   };
 
   return (
@@ -43,18 +29,13 @@ const Comment: React.FC<CommentProps> = ({
       <div className="comment-content">
         <div className="comment-header">
           <span className="comment-author">{author}</span>
-          <span className="comment-time">{time}</span>
-          <StarRating rating={isEditing ? editRating : rating} onRatingChange={setEditRating} readOnly={!isEditing} />
+          <span className="comment-time">{commentTime}</span>
         </div>
-        {photoUrl && <img src={photoUrl} alt="Comment" className="comment-photo"  onClick={handleCommentClick}/>}
         {isEditing ? (
-          <textarea className='edit-comment' value={editText} onChange={(e) => setEditText(e.target.value)} />
+          <textarea className='edit-comment'  value={editText} onChange={(e) => setEditText(e.target.value)} />
         ) : (
           <p>{content}</p>
         )}
-        <div className='comments' onClick={handleCommentClick}>
-          {childComments.length} comments
-        </div>
         {canEdit && (
           <div className="comment-actions">
             {isEditing ? (

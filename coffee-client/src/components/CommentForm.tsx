@@ -6,7 +6,7 @@ import './CommentForm.css';
 import { FaCamera } from 'react-icons/fa';
 
 interface CommentFormProps {
-  onAddComment: (text: string, rating: number, photo: FormData) => void;
+  onAddComment: (text: string, rating: number, photo: FormData | null) => void;
   userAvatar: string | undefined;
 }
 
@@ -17,13 +17,12 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) =
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!photo) {
-      return;
+    let photoFormData = null;
+    if (photo) {
+      photoFormData = new FormData();
+      photoFormData.append('image', photo);
     }
 
-    const photoFormData = new FormData();
-    photoFormData.append('image', photo);
     if (text.trim()) {
       onAddComment(text, rating, photoFormData);
       setText('');
@@ -52,7 +51,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) =
         <FaCamera />
         <input type="file" accept="image/*" onChange={handlePhotoUpload} />
       </label>
-      <button type="submit" disabled={!text.trim() && !photo}>Post</button>
+      <button type="submit" disabled={!text.trim()}>Post</button>
     </form>
   );
 };

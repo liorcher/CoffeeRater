@@ -12,7 +12,6 @@ export const uploadImage = async (image: FormData) => {
   });
 
   if (!response.status) {
-    console.log(response);
     throw new Error("Failed to upload image");
   }
 
@@ -31,7 +30,6 @@ export const login = async (username: string, password: string) => {
   });
 
   if (!res.status) {
-    console.log(res);
     throw new Error("Failed to login");
   }
 };
@@ -39,7 +37,6 @@ export const login = async (username: string, password: string) => {
 export const logout = async () => {
   const response = await fetch(`${BASE_URL}/auth/logout`);
   if (!response.ok) {
-    console.log(response);
     throw new Error("Failed to logout");
   }
   let response_json = await response.json();
@@ -64,7 +61,6 @@ export const signUp = async (
   await login(username, password);
 
   if (!response.status) {
-    console.log(response);
     throw new Error("Failed to sign up");
   }
 };
