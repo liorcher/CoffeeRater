@@ -146,6 +146,6 @@ export const logoutUser = async (
       return next(err);
     }
     res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string);
-    res.redirect("http://localhost:3000");
+    res.status(200).send();
   });
 };

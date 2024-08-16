@@ -23,7 +23,7 @@ const userSchema: Schema<IUser> = new Schema({
   },
   userName: { type: String, required: true },
   avatarUrl: { type: String, required: false },
-  password: { type: String, required: true },
+  password: { type: String, required: false },
 });
 
 userSchema.pre("save", async function (next) {

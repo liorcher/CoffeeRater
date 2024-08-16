@@ -19,16 +19,15 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
-    getPostsWithComments().then(posts => setPosts(posts => posts));
-  }, [setPosts]);
+    getPostsWithComments().then(posts => setPosts(posts));
+  }, []);
 
-  useEffect(() => {
-console.log('bla')  }, [posts]);
+
 
   useEffect(() => {
     const token = Cookies.get('refreshToken');
 
-    if (token) {
+    if (token && !user) {
       axios('http://localhost:9000/api/v1/users/details', {
         method: 'GET'
       }).then(({ data }) => {
@@ -40,12 +39,14 @@ console.log('bla')  }, [posts]);
         console.error('Error:', error);
       });
     }
-  }, [setUser]);
+  }, [setUser, user]);
 
   const updatePosts = async () => {
-    console.log('E');
-    await getPostsWithComments().then(posts => setPosts(posts));
+    setPosts([])
+    const newposts = await getPostsWithComments()
+    setPosts(newposts)
   }
+
   const handleLogout = () => {
 
     setUser(null);
