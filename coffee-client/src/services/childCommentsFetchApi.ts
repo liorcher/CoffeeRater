@@ -18,7 +18,7 @@ export const createChildComment = async (childComment: CreateChildComment) => {
     }
 };
 
-export const updateComment = async (childComment: UpdateChildComment) => {
+export const updateChildComment = async (childComment: UpdateChildComment) => {
     const response = await axios.put(`${BASE_URL}/comments/${childComment.commentId}/updateChild`,
         childComment,
         {
@@ -31,3 +31,12 @@ export const updateComment = async (childComment: UpdateChildComment) => {
         throw new Error("Failed to edit child comment");
     }
 };
+
+
+export const deleteChildComment = async (commentId: string, childCommentId: string) => {
+    const response = await axios.delete(`${BASE_URL}/comments/${commentId}/deleteChild/${childCommentId}`);
+    if (!response.status) {
+        throw new Error("Failed to delete child comment");
+    }
+};
+

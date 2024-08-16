@@ -6,7 +6,7 @@ import './CommentForm.css';
 import { FaCamera } from 'react-icons/fa';
 
 interface CommentFormProps {
-  onAddComment: (text: string, rating: number, photo: FormData) => void;
+  onAddComment: (text: string, rating: number, photo: FormData | null) => void;
   userAvatar: string | undefined;
 }
 
@@ -17,9 +17,9 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) =
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const photoFormData = new FormData();
+    let photoFormData = null;
     if (photo) {
+      photoFormData = new FormData();
       photoFormData.append('image', photo);
     }
 

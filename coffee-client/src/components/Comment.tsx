@@ -38,7 +38,7 @@ const Comment: React.FC<CommentProps> = ({
   };
 
   return (
-    <div className="comment" onClick={handleCommentClick}>
+    <div className="comment">
       <img src={avatarUrl} alt="Author Avatar" className="avatar" />
       <div className="comment-content">
         <div className="comment-header">
@@ -46,13 +46,13 @@ const Comment: React.FC<CommentProps> = ({
           <span className="comment-time">{time}</span>
           <StarRating rating={isEditing ? editRating : rating} onRatingChange={setEditRating} readOnly={!isEditing} />
         </div>
-        {photoUrl && <img src={photoUrl} alt="Comment" className="comment-photo" />}
+        {photoUrl && <img src={photoUrl} alt="Comment" className="comment-photo"  onClick={handleCommentClick}/>}
         {isEditing ? (
-          <textarea value={editText} onChange={(e) => setEditText(e.target.value)} />
+          <textarea className='edit-comment' value={editText} onChange={(e) => setEditText(e.target.value)} />
         ) : (
           <p>{content}</p>
         )}
-        <div className='comments'>
+        <div className='comments' onClick={handleCommentClick}>
           {childComments.length} comments
         </div>
         {canEdit && (

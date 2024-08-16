@@ -1,6 +1,6 @@
 // src/components/Post.tsx
 
-import React, { useState } from 'react';
+import React from 'react';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
 import PostDetails from './PostDetails';
@@ -26,8 +26,6 @@ const Post: React.FC<PostProps> = ({
   currentUserAvatar,
   onCommentChange
 }) => {
-  const [postComments, setPostComments] = useState(comments);
-
   const handleAddComment = async (content: string, rating: number, photo: FormData | null) => {
     const newComment: CreateComment = {
       postId: id,
@@ -67,7 +65,7 @@ const Post: React.FC<PostProps> = ({
         roastLevel={roastLevel} 
         imageUrl={imageUrl} />
       <div className="post-comments">
-        {postComments.map((comment) => (
+        {comments.map((comment) => (
           <Comment
             key={comment.commentId}
             commentId={comment.commentId}
@@ -75,7 +73,7 @@ const Post: React.FC<PostProps> = ({
             author={comment.author}
             content={comment.content}
             avatarUrl={comment.avatarUrl}
-            time={comment.time}
+            time={new Date(comment.commentTime).toLocaleString()}
             photoUrl={comment.photoUrl}
             rating={comment.rating}
             childComments={comment.childComments}

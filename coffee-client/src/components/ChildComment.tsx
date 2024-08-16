@@ -32,7 +32,7 @@ const Comment: React.FC<ChildCommentProps> = ({
           <span className="comment-time">{commentTime}</span>
         </div>
         {isEditing ? (
-          <textarea value={editText} onChange={(e) => setEditText(e.target.value)} />
+          <textarea className='edit-comment'  value={editText} onChange={(e) => setEditText(e.target.value)} />
         ) : (
           <p>{content}</p>
         )}

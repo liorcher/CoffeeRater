@@ -1,11 +1,22 @@
 .comment-details .post-image {
-  width: 100%;
+  max-width: 40%;
   border-radius: 8px;
-  margin: 10px 0;
+  margin: 10px;
+  margin: auto;
+  display: block;
 }
+
+.comment-details .comment-image {
+  max-width: 20%;
+  border-radius: 8px;  
+}
+
 
 .comment-details {
   margin: 20px;
+  border-radius: 2%;
+  border: 1px solid #ddd;
+  padding: 3%;
 }
 
 .comment-details .avatar {

@@ -33,8 +33,6 @@ const App: React.FC = () => {
       axios('http://localhost:9000/api/v1/users/details', {
         method: 'GET'
       }).then(({ data }) => {
-        console.log(data);
-
         const user: any = data.payload.user
         setUser(user);
       }).catch(error => {

@@ -7,7 +7,7 @@ export const getComments = async () => {
 
     const commentsWithUsers = await Promise.all(comments.map(async (comment) => {
       const user = await User.findOne({ userId: comment.userId });
-      const childComments = comment.commentId ? await getChildComments(comment.commentId) : []
+      const childComments = comment.childComments ? await getChildCommentsWithUser(comment.childComments) : []
       return {
         ...comment.toObject(),
         childComments,
@@ -22,19 +22,18 @@ export const getComments = async () => {
   }
 };
 
-export const getChildComments = async (commentId: String) => {
+export const getChildCommentsWithUser = async (childComments: childComment[]) => {
   try {
-    const comment = await Comment.findById(commentId).select('childComments');
-    const childComments = comment?.childComments || [];
+      const commentsWithUsers = await Promise.all(childComments.map(async (child) => {
+        const user = await User.findOne({ userId: child.userId });
 
-    const commentsWithUsers = await Promise.all(childComments.map(async (childComment) => {
-      const user = await User.findOne({ userId: childComment.userId });
-
-      return {
-        ...childComment,
-        avatarUrl: user && user.avatarUrl,
-        author: user && user.userName
-      };
+        return {
+          content: child.content,
+          commentTime: child.commentTime,
+          childCommentId: child.childCommentId,
+          avatarUrl: user && user.avatarUrl,
+          author: user && user.userName
+        };
     }))
 
     return commentsWithUsers
@@ -46,7 +45,7 @@ export const getChildComments = async (commentId: String) => {
 
 export const deleteChildComment  = async (commentId: string, childCommentId: string) => {
   const result = await Comment.updateOne(
-    { _id: commentId },
+    { commentId: commentId },
     { $pull: { childComments: { childCommentId: childCommentId } } }
   );
 
@@ -66,12 +65,11 @@ export const createNewChildComment = async (commentId: String, childCommentData:
       }
     }
   )
-  console.log(result)
 }
 
 export const updateChildComment = async (commentId: String, childCommentData: childComment) => {
   const result = await Comment.updateOne(
-    { _id: commentId, "childComments.childCommentId": childCommentData.childCommentId },
+    { commentId: commentId, "childComments.childCommentId": childCommentData.childCommentId },
     {
       $set: {
         'childComments.$.content': childCommentData.content,
@@ -79,7 +77,7 @@ export const updateChildComment = async (commentId: String, childCommentData: ch
       },
     }
   )
-  console.log(result)
+  return result
 }
 
 export const createNewComment = async (commentData: commentData) => {
@@ -91,6 +89,7 @@ export const createNewComment = async (commentData: commentData) => {
       photoUrl: commentData.photoUrl,
       rating: commentData.rating,
       commentTime: commentData.commentTime,
+      childComments: []
     });
 
     return await newComment.save();
@@ -111,7 +110,7 @@ export const updateComment = async (commentData: commentData) => {
         }
       }
     )
-    console.log(result)
+    return result
   } catch (error: any) {
     throw new Error(`Error updating comment: ${error.message}`);
   }

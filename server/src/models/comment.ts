@@ -6,7 +6,6 @@ export type childComment = {
   userId?: String;
   content?: String;
   commentTime?: Date;
-  isDeleted?: Boolean;
 };
 
 export type commentData = {
@@ -39,11 +38,10 @@ const commentSchema = new Schema({
   commentTime: { type: Date, required: true },
   updateTime: { type: Date, required: false },
   childComments: [new Schema({
-    childCommentId: { type: String, default: uuidv4, unique: true, required: true },
+    childCommentId: { type: String, default: uuidv4, required: true },
     userId: { type: String, required: true },
     content: { type: String, required: true },
-    commentTime: { type: Date, required: true },
-    isDeleted: { type: Boolean, required: true, default: false }
+    commentTime: { type: Date, required: true }
   })],
   isDeleted: { type: Boolean, required: true, default: false },
 });

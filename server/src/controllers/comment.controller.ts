@@ -280,7 +280,8 @@ export const deleteChildCommentRoute = async (req: Request, res: Response) => {
       token,
       process.env.REFRESH_TOKEN_SECRET as string
     );
-    deleteChildComment(commentId, childCommentId);
+    const deletedComment = deleteChildComment(commentId, childCommentId);
+    res.json(deletedComment);
   } catch (err) {
     res.status(500).send(`Error deleting child comment.`);
   }

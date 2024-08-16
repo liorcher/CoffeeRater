@@ -13,7 +13,7 @@ export interface CommentData {
   author: string;
   content: string;
   avatarUrl: string;
-  time: string;
+  commentTime: string;
   rating: number;
   childComments: ChildComment[];
   photoUrl: string | null;
