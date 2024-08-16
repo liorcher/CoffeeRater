@@ -1,0 +1,36 @@
+.comment-details .post-image {
+  width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.comment-details {
+  margin: 20px;
+}
+
+.comment-details .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment-details .comment-content {
+  flex: 1;
+}
+
+.comment-details .comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.comment-details .comment-author {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.comment-details .comment-time {
+  color: #888;
+  margin-right: 10px;
+}
