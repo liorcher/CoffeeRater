@@ -18,12 +18,11 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) =
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!photo) {
-      return;
+    const photoFormData = new FormData();
+    if (photo) {
+      photoFormData.append('image', photo);
     }
 
-    const photoFormData = new FormData();
-    photoFormData.append('image', photo);
     if (text.trim()) {
       onAddComment(text, rating, photoFormData);
       setText('');
@@ -52,7 +51,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment, userAvatar }) =
         <FaCamera />
         <input type="file" accept="image/*" onChange={handlePhotoUpload} />
       </label>
-      <button type="submit" disabled={!text.trim() && !photo}>Post</button>
+      <button type="submit" disabled={!text.trim()}>Post</button>
     </form>
   );
 };

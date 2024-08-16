@@ -3,8 +3,10 @@ import {
   createNewComment,
   deleteComment,
   getComments,
-  updateComment, 
-  createNewChildComment
+  updateComment,
+  createNewChildComment,
+  updateChildComment,
+  deleteChildComment
 } from "../dal/comment.dal";
 import jwt from "jsonwebtoken";
 
@@ -114,13 +116,21 @@ export const createComment = async (req: Request, res: Response) => {
   }
 };
 
-/**
+/** 
  * @swagger
- * /comments:
+ * /:commentId/createChild:
  *   post:
  *     summary: Create a new child comment
- *     description: Creates a new comment for a given comment.
+ *     description: Creates a new child comment for a given parent comment.
  *     tags: [Comment]
+ *     parameters:
+ *       - name: commentId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The ID of the parent comment
  *     requestBody:
  *       required: true
  *       content:
@@ -128,21 +138,37 @@ export const createComment = async (req: Request, res: Response) => {
  *           schema:
  *             type: object
  *             properties:
- *               commentId:
- *                 type: string
  *               content:
  *                 type: string
  *               commentTime:
  *                 type: string
+ *                 format: date-time
  *     responses:
  *       200:
- *         description: Successfully created a comment.
+ *         description: Successfully created a child comment.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 childCommentId:
+ *                   type: string
+ *                   format: uuid
+ *                 content:
+ *                   type: string
+ *                 commentTime:
+ *                   type: string
+ *                   format: date-time
+ *                 parentId:
+ *                   type: string
+ *                   format: uuid
  *       500:
- *         description: Error creating comment.
+ *         description: Error creating child comment.
  */
-export const createChildComment = async (req: Request, res: Response) => {
+export const createChildCommentRoute = async (req: Request, res: Response) => {
   const token = req.cookies.refreshToken;
-  const { commentId, content, commentTime } = req.body;
+  const { commentId } = req.params;
+  const { content, commentTime } = req.body;
   try {
     const payload: any = jwt.verify(
       token,
@@ -159,6 +185,107 @@ export const createChildComment = async (req: Request, res: Response) => {
     res.status(500).send(`Error creating comment.`);
   }
 };
+
+/** 
+ *  @swagger
+ * /:commentId/updateChild:
+ *    put:
+*      summary: Update a child comment
+*      description: Updates a specific child comment of a parent comment.
+*      tags: [Comment]
+*      parameters:
+*        - name: commentId
+*          in: path
+*          required: true
+*          schema:
+*            type: string
+*            format: uuid
+*          description: The ID of the parent comment
+*      requestBody:
+*        required: true
+*        content:
+*          application/json:
+*            schema:
+*              type: object
+*              properties:
+*                childCommentId:
+*                  type: string
+*                  format: uuid
+*                content:
+*                  type: string
+*                commentTime:
+*                  type: string
+*                  format: date-time
+*      responses:
+*        200:
+*          description: Successfully updated the child comment.
+*        500:
+*          description: Error updating child comment.
+*/
+export const updateChildCommentRoute = async (req: Request, res: Response) => {
+  const token = req.cookies.refreshToken;
+  const { commentId } = req.params;
+  const { childCommentId, content, commentTime } = req.body;
+  try {
+    const payload: any = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+    const newComment = updateChildComment(commentId, {
+      userId: payload.user.userId,
+      childCommentId,
+      content,
+      commentTime,
+    });
+
+    res.json(newComment);
+  } catch (err) {
+    res.status(500).send(`Error updating child comment.`);
+  }
+};
+
+/**
+ * @swagger
+ * /:commentId/deleteChild/:childCommentId:
+ *  delete:
+ *    summary: Delete a child comment
+ *    description: Deletes a specific child comment from a parent comment.
+ *    tags: [Comment]
+ *    parameters:
+ *      - name: commentId
+ *        in: path
+ *        required: true
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        description: The ID of the parent comment
+ *      - name: childId
+ *        in: path
+ *        required: true
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        description: The ID of the child comment to delete
+ *    responses:
+ *      200:
+ *        description: Successfully deleted the child comment.
+ *      500:
+ *        description: Error deleting child comment.
+ */
+export const deleteChildCommentRoute = async (req: Request, res: Response) => {
+  const token = req.cookies.refreshToken;
+  const { commentId, childCommentId } = req.params;
+  try {
+    const payload: any = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+    deleteChildComment(commentId, childCommentId);
+  } catch (err) {
+    res.status(500).send(`Error deleting child comment.`);
+  }
+};
+
 
 /**
  * @swagger
@@ -195,7 +322,7 @@ export const updateCommentRoute = async (req: Request, res: Response) => {
     const payload: any = jwt.verify(
       token,
       process.env.REFRESH_TOKEN_SECRET as string
-    ); 
+    );
     const updatedComment = updateComment({
       commentId,
       userId: payload.user.userId,

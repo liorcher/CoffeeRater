@@ -1,4 +1,5 @@
 export interface ChildComment {
+  childCommentId: string;
   content: string;
   commentTime: string;
   author: string;
@@ -8,11 +9,13 @@ export interface ChildComment {
 export interface CreateChildComment {
   content: string;
   commentId: string;
+  commentTime: string;
 }
 
 export interface UpdateChildComment {
   content: string;
   commentId: string;
+  commentTime: string;
   childCommentId: string;
 }
 
