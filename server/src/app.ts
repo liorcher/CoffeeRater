@@ -40,7 +40,7 @@ app.use(
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https://iili.io"],
+      imgSrc: ["'self'", "data:", "https://iili.io", "https://lh3.googleusercontent.com"],
       connectSrc: ["'self'", "https://fake-coffee-api.vercel.app"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
@@ -79,11 +79,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/v1", routes);
 
 app.use(express.static(path.join(__dirname, "../public")));
-
-// Handle all other routes by serving the React app
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../public', 'index.html'));
-// });
 
 // Connect to MongoDB
 connectToDatabase();

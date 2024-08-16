@@ -1,7 +1,7 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-const BASE_URL = "http://localhost:9000/api/v1";
+const BASE_URL = "/api/v1";
 
 export const uploadImage = async (image: FormData) => {
   const response = await axios.post(`${BASE_URL}/images/upload`, image, {

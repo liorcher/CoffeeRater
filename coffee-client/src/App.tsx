@@ -30,7 +30,7 @@ const App: React.FC = () => {
     const token = Cookies.get('refreshToken');
 
     if (token && !user) {
-      axios('http://localhost:9000/api/v1/users/details', {
+      axios('/api/v1/users/details', {
         method: 'GET'
       }).then(({ data }) => {
         const user: any = data.payload.user
@@ -48,7 +48,7 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     setUser(null);
-    axios('http://localhost:9000/api/v1/auth/logout', {
+    axios('/api/v1/auth/logout', {
       method: 'GET'
     }).then(({ data }) => {
       const user: any = data.payload.user
@@ -59,7 +59,7 @@ const App: React.FC = () => {
   };
 
   const handleEditUser = (name: string, avatarUrl: string) => {
-    axios.put('http://localhost:9000/api/v1/users/update', {
+    axios.put('/api/v1/users/update', {
       ...user,
       userName: name,
       avatarUrl: avatarUrl

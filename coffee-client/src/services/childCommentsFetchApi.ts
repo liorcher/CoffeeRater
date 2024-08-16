@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CreateChildComment, UpdateChildComment } from '../models/childComment';
 
-const BASE_URL = 'http://localhost:9000/api/v1'
+const BASE_URL = '/api/v1'
 
 
 export const createChildComment = async (childComment: CreateChildComment) => {

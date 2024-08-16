@@ -133,3 +133,10 @@ dist
 
 # Ignore uploads directory
 /server/uploads/
+ 
+# Ignore sensative keys 
+server/assets/*.pem
+server/assets/*.csr
+
+# Ignore public files
+server/public

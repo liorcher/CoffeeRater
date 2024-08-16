@@ -41,7 +41,7 @@ export const uploadImage = async (req: Request, res: Response) => {
     .status(200)
     .send({
       filename: req.file.filename,
-      path: `http://localhost:9000/api/v1/images/${req.file.filename}`,
+      path: `/api/v1/images/${req.file.filename}`,
     });
 };
 
