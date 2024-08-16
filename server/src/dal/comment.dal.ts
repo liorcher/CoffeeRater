@@ -1,4 +1,4 @@
-import { Comment, commentData } from "../models/comment";
+import { Comment, commentData, childComment } from "../models/comment";
 import User, { IUser, UserBasicData } from "../models/user";
 
 export const getComments = async () => {
@@ -20,6 +20,17 @@ export const getComments = async () => {
   }
 };
 
+export const createNewChildComment = async (commentId: String, childCommentData: childComment) => {
+  const result = await Comment.updateOne(
+    { commentId: commentId },
+    {
+      $push: {
+        childComments: childCommentData
+      }
+    }
+  )
+  console.log(result)
+}
 export const createNewComment = async (commentData: commentData) => {
   try {
     const newComment = new Comment({

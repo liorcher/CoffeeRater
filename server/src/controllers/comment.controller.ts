@@ -3,7 +3,8 @@ import {
   createNewComment,
   deleteComment,
   getComments,
-  updateComment,
+  updateComment, 
+  createNewChildComment
 } from "../dal/comment.dal";
 import jwt from "jsonwebtoken";
 
@@ -104,6 +105,52 @@ export const createComment = async (req: Request, res: Response) => {
       content,
       photoUrl: photo,
       rating,
+      commentTime,
+    });
+
+    res.json(newComment);
+  } catch (err) {
+    res.status(500).send(`Error creating comment.`);
+  }
+};
+
+/**
+ * @swagger
+ * /comments:
+ *   post:
+ *     summary: Create a new child comment
+ *     description: Creates a new comment for a given comment.
+ *     tags: [Comment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               commentId:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               commentTime:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully created a comment.
+ *       500:
+ *         description: Error creating comment.
+ */
+export const createChildComment = async (req: Request, res: Response) => {
+  const token = req.cookies.refreshToken;
+  const { commentId, content, commentTime } = req.body;
+  try {
+    const payload: any = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+    const newComment = createNewChildComment(commentId, {
+      userId: payload.user.userId,
+      content,
       commentTime,
     });
 
