@@ -4,25 +4,20 @@ import React, { useState } from 'react';
 import StarRating from './StarRating';
 import './Comment.css';
 
-interface CommentProps {
-  author: string;
-  content: string;
-  avatarUrl: string;
-  time: string;
-  rating: number;
-  photoUrl: string | null;
-  canEdit: boolean;
-  onEdit: (newText: string, newRating: number) => void;
-  onDelete: () => void;
-}
+import {CommentProps} from '../models/comment';
+import { useNavigate } from 'react-router-dom';
+
 
 const Comment: React.FC<CommentProps> = ({
+  commentId, 
+  postId,
   author,
   content,
   avatarUrl,
   time,
   rating,
   photoUrl,
+  childComments,
   canEdit,
   onEdit,
   onDelete,
@@ -30,14 +25,20 @@ const Comment: React.FC<CommentProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(content);
   const [editRating, setEditRating] = useState(rating);
+  const navigate = useNavigate();
+
 
   const handleEdit = () => {
     onEdit(editText, editRating);
     setIsEditing(false);
   };
 
+  const handleCommentClick = () => {
+    navigate(`/posts/${postId}/comments/${commentId}`);
+  };
+
   return (
-    <div className="comment">
+    <div className="comment" onClick={handleCommentClick}>
       <img src={avatarUrl} alt="Author Avatar" className="avatar" />
       <div className="comment-content">
         <div className="comment-header">
@@ -51,6 +52,9 @@ const Comment: React.FC<CommentProps> = ({
         ) : (
           <p>{content}</p>
         )}
+        <div className='comments'>
+          {childComments.length} comments
+        </div>
         {canEdit && (
           <div className="comment-actions">
             {isEditing ? (

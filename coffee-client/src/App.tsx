@@ -10,11 +10,13 @@ import Cookies from 'js-cookie';
 import { useUser } from './userContext';
 import { getPostsWithComments } from './services/coffeeApi'
 import axios from 'axios';
+import CommentDetails from './components/CommentDetails';
+import { PostData } from './models/post';
 
 axios.defaults.withCredentials = true
 
 const App: React.FC = () => {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const { user, setUser } = useUser()
 
 
@@ -42,13 +44,11 @@ const App: React.FC = () => {
   }, [setUser, user]);
 
   const updatePosts = async () => {
-    setPosts([])
     const newposts = await getPostsWithComments()
     setPosts(newposts)
   }
 
   const handleLogout = () => {
-
     setUser(null);
     axios('http://localhost:9000/api/v1/auth/logout', {
       method: 'GET'
@@ -99,6 +99,7 @@ const App: React.FC = () => {
             ))}
           </div>
         } />
+        <Route path="posts/:postId/comments/:commentId" Component={CommentDetails}/>
       </Routes>
     </Router>
   );

@@ -33,7 +33,6 @@ const commentSchema = new Schema({
   },
   photoUrl: { type: String, required: false },
   postId: { type: String, required: true },
-  childComment: { type: String },
   userId: { type: String, ref: 'user', required: true },
   content: { type: String, required: true },
   rating: { type: Number, required: false },

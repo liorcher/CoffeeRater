@@ -63,3 +63,7 @@
   background-color: #b2dffc;
   cursor: not-allowed;
 }
+
+.comment .comments {
+ color: gray;
+}
