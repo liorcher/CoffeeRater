@@ -42,9 +42,9 @@ export const updateUserDetails = async (
   }
 };
 
-export const getUserById = async (userid: string) => {
+export const getUserById = async (userId: string) => {
   try {
-    return await User.find({ _id: userid });
+    return await User.find({ userId: userId });
   } catch (error: any) {
     throw new Error(`Error saving users: ${error.message}`);
   }

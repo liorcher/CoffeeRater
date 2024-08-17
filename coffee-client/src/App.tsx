@@ -33,7 +33,7 @@ const App: React.FC = () => {
       axios('/api/v1/users/details', {
         method: 'GET'
       }).then(({ data }) => {
-        const user: any = data.payload.user
+        const user: any = data.user[0]
         setUser(user);
       }).catch(error => {
         console.error('Error:', error);
@@ -64,7 +64,6 @@ const App: React.FC = () => {
       userName: name,
       avatarUrl: avatarUrl
     }).then(({ data }) => {
-      debugger
       setUser(data);
     })
   };
